@@ -11,38 +11,26 @@ const i18n = t(lang);
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-16 border-t border-[var(--border-color)] py-12 text-sm text-[var(--text-muted)]" role="contentinfo">
-  <div class="container-shell grid grid-cols-1 md:grid-cols-4 gap-10">
-    <!-- Brand -->
-    <div class="md:col-span-2 flex flex-col gap-3">
-      <h3 class="text-lg font-semibold text-[var(--text-primary)]">{SITE.name}</h3>
-      <p class="text-[var(--text-secondary)] max-w-sm leading-relaxed">AI Engineer — {lang === 'vi' ? 'Chia sẻ kinh nghiệm thực chiến về AI Agents, MLOps, AI Governance và triển khai AI trong doanh nghiệp.' : 'Sharing practical insights on AI Agents, MLOps, AI Governance and shipping AI in enterprise.'}</p>
+<footer class="mt-20 border-t border-[var(--border-color)] py-10 text-sm text-[var(--text-muted)]" role="contentinfo">
+  <div class="container-shell flex flex-col gap-8">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+      <div class="max-w-sm">
+        <h3 class="text-base font-semibold text-[var(--text-primary)] mb-2">{SITE.name}</h3>
+        <p class="text-[var(--text-secondary)] leading-relaxed">AI Engineer — {lang === 'vi' ? 'Chia sẻ kinh nghiệm thực chiến về AI Agents, MLOps và triển khai AI trong doanh nghiệp.' : 'Practical insights on AI Agents, MLOps, and shipping AI in enterprise.'}</p>
+      </div>
+      <div class="flex gap-10">
+        <nav class="flex flex-col gap-2" aria-label="Footer navigation">
+          <a href={`/${lang}/blog`} class="transition hover:text-[var(--text-primary)]">{i18n.nav.blog}</a>
+          <a href={`/${lang}/projects`} class="transition hover:text-[var(--text-primary)]">{i18n.nav.projects}</a>
+          <a href={`/${lang}/about`} class="transition hover:text-[var(--text-primary)]">{i18n.nav.about}</a>
+        </nav>
+        <nav class="flex flex-col gap-2" aria-label="Social links">
+          <a href={SITE.github} target="_blank" rel="noreferrer" class="transition hover:text-[var(--text-primary)]">GitHub</a>
+          <a href={SITE.linkedin} target="_blank" rel="noreferrer" class="transition hover:text-[var(--text-primary)]">LinkedIn</a>
+          <a href={SITE.email} class="transition hover:text-[var(--text-primary)]">Email</a>
+        </nav>
+      </div>
     </div>
-
-    <!-- Quick Links -->
-    <div class="flex flex-col gap-3">
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-[var(--text-primary)]">{lang === 'vi' ? 'Liên kết' : 'Links'}</h4>
-      <nav class="flex flex-col gap-2" aria-label="Footer navigation">
-        <a href={`/${lang}/blog`} class="transition hover:text-[var(--brand)]">{i18n.nav.blog}</a>
-        <a href={`/${lang}/projects`} class="transition hover:text-[var(--brand)]">{i18n.nav.projects}</a>
-        <a href={`/${lang}/about`} class="transition hover:text-[var(--brand)]">{i18n.nav.about}</a>
-        <a href={`/${lang}/rss.xml`} class="transition hover:text-[var(--brand)]">RSS</a>
-      </nav>
-    </div>
-
-    <!-- Connect -->
-    <div class="flex flex-col gap-3">
-      <h4 class="text-xs font-semibold uppercase tracking-widest text-[var(--text-primary)]">{lang === 'vi' ? 'Kết nối' : 'Connect'}</h4>
-      <nav class="flex flex-col gap-2" aria-label="Social links">
-        <a href={SITE.github} target="_blank" rel="noreferrer" class="transition hover:text-[var(--brand)]">GitHub</a>
-        <a href={SITE.linkedin} target="_blank" rel="noreferrer" class="transition hover:text-[var(--brand)]">LinkedIn</a>
-        <a href={SITE.portfolio} target="_blank" rel="noreferrer" class="transition hover:text-[var(--brand)]">Portfolio</a>
-        <a href={SITE.email} class="transition hover:text-[var(--brand)]">Email</a>
-      </nav>
-    </div>
-  </div>
-
-  <div class="container-shell mt-10 pt-6 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-2">
-    <p>© {year} {SITE.name}</p>
+    <p class="text-xs text-[var(--text-muted)]">© {year} {SITE.name}</p>
   </div>
 </footer>
