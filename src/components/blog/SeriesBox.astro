@@ -1,0 +1,50 @@
+---
+import type { Locale } from '../../consts';
+import type { BlogPost } from '../../utils/posts';
+import { t } from '../../utils/i18n';
+import { buildSeriesPath, buildPostPath, getPostSlug } from '../../utils/posts';
+
+interface Props {
+  series: string;
+  lang: Locale;
+  seriesPosts?: BlogPost[];
+  currentPostId?: string;
+}
+
+const { series, lang, seriesPosts = [], currentPostId } = Astro.props;
+const i18n = t(lang);
+---
+
+<aside class="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-5 text-sm">
+  <div class="flex items-center justify-between mb-3">
+    <a href={buildSeriesPath(lang, series)} class="font-semibold text-[var(--brand)] hover:underline">
+      {i18n.common.series}: {series}
+    </a>
+    {seriesPosts.length > 0 && (
+      <span class="text-[var(--text-muted)] text-xs">{seriesPosts.length} parts</span>
+    )}
+  </div>
+  {seriesPosts.length > 0 && (
+    <p class="text-[var(--text-muted)] text-xs mb-2">{i18n.common.seriesPartOf}</p>
+    <ol class="flex flex-col gap-1.5 list-none pl-0">
+      {seriesPosts.map((post, index) => {
+        const isCurrent = post.id === currentPostId;
+        return (
+          <li>
+            {isCurrent ? (
+              <span class="flex items-center gap-2 text-[var(--brand)] font-medium">
+                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--brand)] text-white flex items-center justify-center text-[10px] font-bold">{index + 1}</span>
+                {post.data.title}
+              </span>
+            ) : (
+              <a href={buildPostPath(lang, getPostSlug(post))} class="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--brand)] transition-colors">
+                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-color)] text-[var(--text-muted)] flex items-center justify-center text-[10px] font-bold">{index + 1}</span>
+                {post.data.title}
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  )}
+</aside>

@@ -1,0 +1,110 @@
+---
+import type { Locale } from '../consts';
+import type { ProjectEntry } from '../utils/projects';
+import type { AlternateLink } from '../utils/seo';
+import { SITE } from '../consts';
+import { buildAbsoluteUrl } from '../utils/seo';
+import BaseLayout from './BaseLayout.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import TechStack from '../components/project/TechStack.astro';
+
+interface Props {
+  lang: Locale;
+  project: ProjectEntry;
+  canonicalPath: string;
+  alternates?: AlternateLink[];
+}
+
+const { lang, project, canonicalPath, alternates } = Astro.props;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Projects',
+      item: buildAbsoluteUrl(`/${lang}/projects`)
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: project.data.title
+    }
+  ]
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${project.data.title} | Project`}
+  description={project.data.description}
+  canonicalPath={canonicalPath}
+  ogImage={project.data.cover}
+  alternates={alternates}
+>
+  <Fragment slot="head">
+    <JsonLd schema={breadcrumbSchema} />
+  </Fragment>
+
+  <main id="main-content" class="container-shell py-16 flex flex-col gap-16">
+    <!-- Breadcrumb -->
+    <nav class="flex gap-2 text-sm text-[var(--text-muted)]" aria-label="Breadcrumb">
+      <a href={`/${lang}/projects`} class="hover:text-[var(--brand)] transition-colors">Projects</a> /
+      <span class="text-[var(--text-primary)]">{project.data.title}</span>
+    </nav>
+
+    {project.data.cover && (
+      <div class="w-full aspect-[2/1] md:aspect-[16/9] rounded-xl border border-[var(--border-color)] overflow-hidden">
+        <img
+          src={project.data.cover}
+          alt={project.data.title}
+          class="w-full h-full object-cover"
+          width="1200"
+          height="630"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <!-- Title + Tech + Buttons -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-[var(--border-color)] pb-10">
+      <div class="flex flex-col gap-3">
+        <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{project.data.title}</h1>
+        <div class="flex flex-wrap gap-2 mt-1">
+          <TechStack stack={project.data.techStack} />
+        </div>
+      </div>
+      <div class="flex gap-4">
+        {project.data.githubUrl && (
+          <a
+            href={project.data.githubUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg border border-[#2a2a2c] px-6 py-2.5 text-sm font-medium transition hover:bg-[#2a2a2c]"
+          >
+            GitHub
+          </a>
+        )}
+        {project.data.demoUrl && (
+          <a
+            href={project.data.demoUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition hover:brightness-105"
+          >
+            Live Demo ↗
+          </a>
+        )}
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="prose-block text-lg leading-relaxed">
+      <slot />
+    </div>
+  </main>
+</BaseLayout>

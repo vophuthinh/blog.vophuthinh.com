@@ -1,0 +1,226 @@
+---
+import type { Locale } from '../consts';
+import type { BlogPost } from '../utils/posts';
+import type { AlternateLink } from '../utils/seo';
+import { SITE } from '../consts';
+import { buildAbsoluteUrl } from '../utils/seo';
+import { t } from '../utils/i18n';
+import BaseLayout from './BaseLayout.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import PostMeta from '../components/blog/PostMeta.astro';
+import TagList from '../components/blog/TagList.astro';
+import SeriesBox from '../components/blog/SeriesBox.astro';
+import RelatedPosts from '../components/blog/RelatedPosts.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import ReadingProgress from '../components/blog/ReadingProgress.astro';
+import GiscusComments from '../components/blog/GiscusComments.astro';
+import { estimateReadingTime, buildCategoryPath, buildPostPath, getPostSlug } from '../utils/posts';
+
+interface Props {
+  lang: Locale;
+  post: BlogPost;
+  canonicalPath: string;
+  alternates?: AlternateLink[];
+  relatedPosts: BlogPost[];
+  seriesPosts?: BlogPost[];
+  prevPost?: BlogPost | null;
+  nextPost?: BlogPost | null;
+}
+
+const { lang, post, canonicalPath, alternates, relatedPosts, seriesPosts = [], prevPost, nextPost } = Astro.props;
+const i18n = t(lang);
+const readingTime = estimateReadingTime(post.body);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  author: {
+    '@type': 'Person',
+    name: SITE.name
+  },
+  publisher: {
+    '@type': 'Person',
+    name: SITE.name
+  },
+  image: buildAbsoluteUrl(post.data.cover ?? SITE.defaultOgImage),
+  mainEntityOfPage: buildAbsoluteUrl(canonicalPath)
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Blog',
+      item: buildAbsoluteUrl(`/${lang}/blog`)
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: post.data.title
+    }
+  ]
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${post.data.title} | ${SITE.name}`}
+  description={post.data.description}
+  canonicalPath={canonicalPath}
+  ogImage={post.data.cover}
+  type="article"
+  alternates={alternates}
+  publishedTime={post.data.pubDate}
+  modifiedTime={post.data.updatedDate}
+>
+  <Fragment slot="head">
+    <JsonLd schema={schema} />
+    <JsonLd schema={breadcrumbSchema} />
+    {post.data.tags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+    <meta property="article:section" content={post.data.category} />
+    <meta property="article:author" content={SITE.url} />
+  </Fragment>
+
+  <ReadingProgress />
+
+  <main id="main-content" class="container-shell py-12 md:py-16">
+    <div class="relative flex gap-8 lg:gap-12">
+      <!-- Main Article -->
+      <article class="mx-auto max-w-[800px] min-w-0 flex-1 flex flex-col gap-8 md:gap-10">
+        <!-- Breadcrumb -->
+        <nav class="flex gap-2 text-sm text-[var(--text-muted)]" aria-label="Breadcrumb">
+          <a href={`/${lang}/blog`} class="hover:text-[var(--brand)] transition-colors">Blog</a> /
+          <a href={buildCategoryPath(lang, post.data.category)} class="hover:text-[var(--brand)] transition-colors">{post.data.category}</a> /
+          <span class="text-[var(--text-primary)] truncate">{post.data.title}</span>
+        </nav>
+
+        <h1 class="text-[34px] md:text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{post.data.title}</h1>
+
+        <!-- Meta bar -->
+        <div class="flex items-center gap-4 text-[var(--text-muted)] text-sm border-b border-[var(--border-color)] pb-4">
+          <PostMeta post={post} lang={lang} readingTime={readingTime} />
+        </div>
+
+        {post.data.cover && (
+          <div class="w-full aspect-[2/1] md:aspect-[16/9] rounded-xl border border-[var(--border-color)] overflow-hidden">
+            <img
+              src={post.data.cover}
+              alt={post.data.title}
+              class="w-full h-full object-cover"
+              width="1200"
+              height="630"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+        )}
+
+        {post.data.series && (
+          <SeriesBox series={post.data.series} lang={lang} seriesPosts={seriesPosts} currentPostId={post.id} />
+        )}
+
+        <div class="flex flex-wrap gap-2">
+          <TagList tags={post.data.tags} lang={lang} />
+        </div>
+
+        <div class="prose-block text-[1.02rem] md:text-lg leading-relaxed flex flex-col gap-6">
+          <slot />
+        </div>
+
+        <!-- Prev / Next Navigation -->
+        {(prevPost || nextPost) && (
+          <nav class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-[var(--border-color)] pt-8" aria-label="Post navigation">
+            {prevPost ? (
+              <a href={buildPostPath(lang, getPostSlug(prevPost))} class="group flex flex-col gap-1 rounded-xl border border-[var(--border-color)] p-4 transition hover:border-[var(--brand-light)]/50">
+                <span class="text-xs text-[var(--text-muted)]">← {i18n.common.prevPost}</span>
+                <span class="font-medium text-[var(--text-primary)] group-hover:text-[var(--brand)] transition-colors">{prevPost.data.title}</span>
+              </a>
+            ) : <div />}
+            {nextPost ? (
+              <a href={buildPostPath(lang, getPostSlug(nextPost))} class="group flex flex-col gap-1 rounded-xl border border-[var(--border-color)] p-4 text-right transition hover:border-[var(--brand-light)]/50">
+                <span class="text-xs text-[var(--text-muted)]">{i18n.common.nextPost} →</span>
+                <span class="font-medium text-[var(--text-primary)] group-hover:text-[var(--brand)] transition-colors">{nextPost.data.title}</span>
+              </a>
+            ) : <div />}
+          </nav>
+        )}
+
+        <RelatedPosts posts={relatedPosts} lang={lang} title={i18n.common.relatedPosts} />
+
+        <GiscusComments lang={lang} />
+      </article>
+
+      <!-- TOC Sidebar -->
+      <TableOfContents lang={lang} />
+    </div>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const LANG_LABELS = {
+        js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript',
+        py: 'Python', python: 'Python', bash: 'Bash', sh: 'Shell', zsh: 'Shell',
+        dockerfile: 'Dockerfile', docker: 'Docker', json: 'JSON', yaml: 'YAML', yml: 'YAML',
+        html: 'HTML', css: 'CSS', sql: 'SQL', graphql: 'GraphQL', md: 'Markdown', mdx: 'MDX',
+        jsx: 'JSX', tsx: 'TSX', rust: 'Rust', go: 'Go', java: 'Java', cpp: 'C++', c: 'C',
+        toml: 'TOML', ini: 'INI', xml: 'XML', astro: 'Astro', vue: 'Vue', svelte: 'Svelte',
+        txt: 'Text', text: 'Text', plaintext: 'Text'
+      };
+
+      document.querySelectorAll('.prose-block pre').forEach((pre) => {
+        if (pre.closest('.code-block-wrapper')) return;
+
+        const code = pre.querySelector('code');
+        const langClass = code?.className?.match(/language-(\w+)/);
+        const lang = langClass?.[1] || '';
+        const label = LANG_LABELS[lang] || lang.toUpperCase() || 'CODE';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+
+        const header = document.createElement('div');
+        header.className = 'code-header';
+        header.innerHTML = '<div class="code-dots"><span></span><span></span><span></span></div>';
+
+        const headerRight = document.createElement('div');
+        headerRight.className = 'code-header-right';
+
+        const langBadge = document.createElement('span');
+        langBadge.className = 'code-lang';
+        langBadge.textContent = label;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'code-copy-btn';
+        copyBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy';
+        copyBtn.addEventListener('click', () => {
+          const text = code?.textContent || '';
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+              copyBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy';
+              copyBtn.classList.remove('copied');
+            }, 2000);
+          });
+        });
+
+        pre.parentNode.insertBefore(wrapper, pre);
+        headerRight.appendChild(langBadge);
+        headerRight.appendChild(copyBtn);
+        header.appendChild(headerRight);
+        wrapper.appendChild(header);
+        wrapper.appendChild(pre);
+      });
+    })();
+  </script>
+</BaseLayout>

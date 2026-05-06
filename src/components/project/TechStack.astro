@@ -1,0 +1,15 @@
+---
+interface Props {
+  stack: string[];
+}
+
+const { stack } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2">
+  {
+    stack.map((item) => (
+      <span class="pill">{item}</span>
+    ))
+  }
+</div>

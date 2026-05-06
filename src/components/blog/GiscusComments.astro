@@ -1,0 +1,79 @@
+---
+import type { Locale } from '../../consts';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const repo = 'vophuthinh/blog.vophuthinh.com';
+const giscusLang = lang === 'vi' ? 'vi' : 'en';
+---
+
+<section id="comments" class="mt-12 border-t border-[var(--border-color)] pt-8">
+  <h2 class="text-xl font-semibold tracking-tight mb-5">{lang === 'vi' ? 'Bình luận' : 'Comments'}</h2>
+  <div id="giscus-container"></div>
+</section>
+
+<script is:inline define:vars={{ repo, giscusLang }}>
+(() => {
+  function loadGiscus() {
+    const container = document.getElementById('giscus-container');
+    if (!container || container.querySelector('.giscus')) return;
+
+    const theme = document.documentElement.classList.contains('dark')
+      ? 'noborder_dark'
+      : 'noborder_light';
+
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.dataset.repo = repo;
+    script.dataset.repoId = '';
+    script.dataset.category = 'Comments';
+    script.dataset.categoryId = '';
+    script.dataset.mapping = 'pathname';
+    script.dataset.strict = '0';
+    script.dataset.reactionsEnabled = '1';
+    script.dataset.emitMetadata = '0';
+    script.dataset.inputPosition = 'top';
+    script.dataset.theme = theme;
+    script.dataset.lang = giscusLang;
+    script.dataset.loading = 'lazy';
+    script.crossOrigin = 'anonymous';
+    script.async = true;
+    container.appendChild(script);
+  }
+
+  // Lazy load when section is visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadGiscus();
+        observer.disconnect();
+      }
+    });
+  }, { rootMargin: '200px' });
+
+  const section = document.getElementById('comments');
+  if (section) observer.observe(section);
+
+  // Update theme when toggled
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      setTimeout(() => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (iframe) {
+          const newTheme = document.documentElement.classList.contains('dark')
+            ? 'noborder_dark'
+            : 'noborder_light';
+          iframe.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: newTheme } } },
+            'https://giscus.app'
+          );
+        }
+      }, 100);
+    });
+  }
+})();
+</script>

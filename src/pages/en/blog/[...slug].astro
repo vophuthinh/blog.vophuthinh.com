@@ -1,0 +1,68 @@
+---
+import { render } from 'astro:content';
+import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
+import { buildAbsoluteUrl } from '../../../utils/seo';
+import {
+  getPostsByLang,
+  getPostSlug,
+  getPostTranslationKey,
+  getRelatedPosts,
+  getPostsBySeries,
+  getPrevNextPosts
+} from '../../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPostsByLang('en');
+  return posts.map((post) => ({
+    params: { slug: getPostSlug(post) }
+  }));
+}
+
+const slug = Astro.params.slug;
+if (!slug) {
+  throw new Error('Missing post slug.');
+}
+
+const posts = await getPostsByLang('en');
+const post = posts.find((item) => getPostSlug(item) === slug);
+if (!post) {
+  throw new Error(`Post not found: ${slug}`);
+}
+
+const viPosts = await getPostsByLang('vi');
+const translationKey = getPostTranslationKey(post);
+const translatedPost = viPosts.find(
+  (item) => getPostTranslationKey(item) === translationKey
+);
+
+const canonicalPath = `/en/blog/${getPostSlug(post)}`;
+const alternates = [
+  { hrefLang: 'en', href: buildAbsoluteUrl(canonicalPath) },
+  {
+    hrefLang: 'vi',
+    href: buildAbsoluteUrl(`/vi/blog/${translatedPost ? getPostSlug(translatedPost) : getPostSlug(post)}`)
+  },
+  {
+    hrefLang: 'x-default',
+    href: buildAbsoluteUrl(`/vi/blog/${translatedPost ? getPostSlug(translatedPost) : getPostSlug(post)}`)
+  }
+];
+
+const relatedPosts = getRelatedPosts(post, posts, 3);
+const seriesPosts = post.data.series ? getPostsBySeries(posts, post.data.series) : [];
+const { prev: prevPost, next: nextPost } = getPrevNextPosts(post, posts);
+const { Content } = await render(post);
+---
+
+<BlogPostLayout
+  lang="en"
+  post={post}
+  canonicalPath={canonicalPath}
+  alternates={alternates}
+  relatedPosts={relatedPosts}
+  seriesPosts={seriesPosts}
+  prevPost={prevPost}
+  nextPost={nextPost}
+>
+  <Content />
+</BlogPostLayout>

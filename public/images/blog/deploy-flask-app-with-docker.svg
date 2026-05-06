@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1e1b4b"/>
+  <rect x="52" y="52" width="1096" height="526" rx="24" fill="#312e81" stroke="#818cf8" stroke-width="2"/>
+  <text x="90" y="230" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="56" font-weight="700">Deploy Flask App with Docker</text>
+  <text x="90" y="320" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="34">Production-oriented container guide</text>
+</svg>

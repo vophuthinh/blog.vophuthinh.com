@@ -1,0 +1,68 @@
+---
+import type { Locale } from '../../consts';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const title = lang === 'vi' ? 'Mục lục' : 'Table of Contents';
+---
+
+<aside id="toc-wrapper" class="hidden xl:block">
+  <nav id="toc" class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" aria-label={title}>
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-3">{title}</h2>
+    <ul id="toc-list" class="flex flex-col gap-0.5 text-sm border-l border-[var(--border-color)]">
+      <!-- Populated by JS -->
+    </ul>
+  </nav>
+</aside>
+
+<script is:inline>
+(() => {
+  const tocList = document.getElementById('toc-list');
+  const tocWrapper = document.getElementById('toc-wrapper');
+  const article = document.querySelector('.prose-block');
+  if (!tocList || !article) return;
+
+  const headings = article.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    if (tocWrapper) tocWrapper.classList.add('hidden');
+    return;
+  }
+
+  headings.forEach((heading, i) => {
+    if (!heading.id) heading.id = 'heading-' + i;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + heading.id;
+    a.textContent = heading.textContent;
+    a.className = 'block py-1 text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors truncate';
+    if (heading.tagName === 'H3') {
+      a.classList.add('pl-6');
+    } else {
+      a.classList.add('pl-3');
+    }
+    a.dataset.tocLink = '';
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  // Active tracking
+  const links = tocList.querySelectorAll('[data-toc-link]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('text-[var(--brand)]', 'border-l-2', 'border-[var(--brand)]', 'font-medium'));
+        const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+        if (active) {
+          active.classList.add('text-[var(--brand)]', 'border-l-2', 'border-[var(--brand)]', 'font-medium');
+          active.classList.remove('text-[var(--text-muted)]');
+        }
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+
+  headings.forEach(h => observer.observe(h));
+})();
+</script>

@@ -1,0 +1,21 @@
+{
+  "name": "Võ Phú Thịnh — Blog & Portfolio",
+  "short_name": "VPT Blog",
+  "description": "Bilingual blog and portfolio by an AI Engineer sharing practical work on LLM, RAG, AI Agents, automation, and enterprise systems.",
+  "start_url": "/vi",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#ec1839",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "48x48"
+    }
+  ]
+}

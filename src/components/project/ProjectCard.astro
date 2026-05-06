@@ -1,0 +1,54 @@
+---
+import type { ProjectEntry } from '../../utils/projects';
+import type { Locale } from '../../consts';
+import { buildProjectPath, getProjectSlug } from '../../utils/projects';
+import TechStack from './TechStack.astro';
+
+interface Props {
+  project: ProjectEntry;
+  lang: Locale;
+}
+
+const { project, lang } = Astro.props;
+const projectSlug = getProjectSlug(project);
+---
+
+<article class="group bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg overflow-hidden transition-all duration-300 hover:border-[var(--brand-light)]/40 hover:shadow-2xl flex flex-col h-full">
+  <div class="h-48 w-full bg-[var(--bg-surface)] relative overflow-hidden border-b border-[var(--border-color)]">
+    {project.data.cover && (
+      <img
+        src={project.data.cover}
+        alt={project.data.title}
+        class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+        width="600"
+        height="300"
+        loading="lazy"
+        decoding="async"
+      />
+    )}
+  </div>
+  <div class="p-6 flex flex-col flex-grow">
+    <h2 class="text-[30px] font-semibold leading-[1.2] tracking-[-0.01em] text-[var(--text-primary)] mb-1">{project.data.title}</h2>
+    <p class="text-[var(--text-secondary)] mb-4 flex-grow">{project.data.description}</p>
+    <div class="flex flex-wrap gap-1 mb-6">
+      {project.data.techStack.map((tech) => (
+        <span class="font-mono px-1 py-[2px] bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-secondary)] rounded uppercase text-[10px]">{tech}</span>
+      ))}
+    </div>
+    <div class="flex gap-2 border-t border-[var(--border-color)] pt-4">
+      {project.data.demoUrl && (
+        <a href={project.data.demoUrl} target="_blank" rel="noreferrer" class="text-sm flex items-center gap-1 px-2 py-1 bg-[var(--brand)] text-white rounded hover:brightness-105 transition-colors font-medium">
+          Live Demo
+        </a>
+      )}
+      <a href={buildProjectPath(lang, projectSlug)} class="text-sm flex items-center gap-1 px-2 py-1 bg-transparent border border-[var(--border-color)] text-[var(--text-primary)] rounded hover:bg-[var(--bg-surface)] transition-colors font-medium">
+        Details →
+      </a>
+      {project.data.githubUrl && (
+        <a href={project.data.githubUrl} target="_blank" rel="noreferrer" class="text-sm flex items-center gap-1 px-2 py-1 bg-transparent border border-[var(--border-color)] text-[var(--text-primary)] rounded hover:bg-[var(--bg-surface)] transition-colors font-medium">
+          GitHub
+        </a>
+      )}
+    </div>
+  </div>
+</article>

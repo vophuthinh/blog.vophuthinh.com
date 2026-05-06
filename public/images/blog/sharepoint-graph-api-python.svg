@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="52" y="52" width="1096" height="526" rx="24" fill="#172554" stroke="#38bdf8" stroke-width="2"/>
+  <text x="90" y="230" fill="#bae6fd" font-family="Arial, sans-serif" font-size="56" font-weight="700">SharePoint + Graph API + Python</text>
+  <text x="90" y="320" fill="#93c5fd" font-family="Arial, sans-serif" font-size="34">Practical automation blueprint</text>
+</svg>

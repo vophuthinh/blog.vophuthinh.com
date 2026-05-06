@@ -1,0 +1,53 @@
+---
+title: 'Download Files from SharePoint with Microsoft Graph API and Python'
+description: 'A practical guide to downloading files from SharePoint using Python and Microsoft Graph API, handling token errors, site ID, drive ID and subfolders.'
+pubDate: 2026-05-06
+updatedDate: 2026-05-06
+lang: 'en'
+translationKey: 'sharepoint-graph-api-python'
+category: 'SharePoint'
+tags: ['python', 'sharepoint', 'microsoft-graph', 'automation']
+series: 'SharePoint Automation'
+cover: '/images/covers/sharepoint-graph-api-python.webp'
+draft: false
+featured: true
+---
+
+In enterprise environments, SharePoint is often the default document backbone.
+Pairing **Python** with **Microsoft Graph API** gives us a robust automation layer.
+
+## Prepare Azure App Registration
+
+- Create an app registration in Azure AD.
+- Grant `Sites.ReadWrite.All` and `Files.ReadWrite.All`.
+- Ensure admin consent is completed.
+
+## Access token example
+
+```python
+import requests
+
+TENANT_ID = "your-tenant-id"
+CLIENT_ID = "your-client-id"
+CLIENT_SECRET = "your-client-secret"
+
+url = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token"
+payload = {
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "scope": "https://graph.microsoft.com/.default",
+    "grant_type": "client_credentials",
+}
+
+response = requests.post(url, data=payload, timeout=30)
+response.raise_for_status()
+print(response.json()["access_token"])
+```
+
+## Production notes
+
+- Add retry and timeout for every request.
+- Keep structured logs for observability.
+- Control batch size to reduce throttling.
+
+Once this baseline is stable, you can automate reporting, document synchronization, and governance checks at scale.

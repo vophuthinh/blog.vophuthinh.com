@@ -1,0 +1,23 @@
+---
+title: 'HPT D-DAY 2025 Chatbot'
+description: 'Chatbot AI dùng RAG, bám sát dữ liệu sự kiện chính thức với tiêu chí zero hallucination tại HPT D-DAY 2025.'
+lang: 'vi'
+translationKey: 'hpt-d-day-2025-chatbot'
+techStack: ['n8n', 'OpenAI', 'JavaScript', 'RAG', 'Google Sheets', 'Vector Store']
+cover: '/images/projects/hpt-d-day-2025-chatbot.webp'
+featured: true
+---
+
+Tại HPT D-DAY 2025, khách tham dự và ban tổ chức cần câu trả lời tức thời về lịch trình, phiên thảo luận, gian hàng và đối tác.
+
+Mình triển khai chatbot RAG theo nguyên tắc chỉ trả lời từ dữ liệu chính thức:
+
+- Dữ liệu sự kiện từ Excel được chunk và index vào vector store.
+- GPT-4o chỉ trả lời dựa trên context truy xuất được; thiếu dữ liệu thì bot nói rõ là không có.
+- Workflow n8n kết nối toàn bộ pipeline, Google Sheets giúp cập nhật nội dung realtime.
+
+Kết quả:
+
+- Xử lý **850+ câu hỏi** trong thời gian diễn ra sự kiện.
+- Duy trì tiêu chí **zero hallucination** cho thông tin quan trọng.
+- Giảm tải đáng kể cho đội onsite support.

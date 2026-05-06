@@ -1,0 +1,95 @@
+---
+import { SITE, type Locale } from '../../consts';
+import { t } from '../../utils/i18n';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  lang: Locale;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const i18n = t(lang);
+const homePath = `/${lang}`;
+
+const navItems = [
+  { href: homePath, label: i18n.nav.home, external: false },
+  { href: `/${lang}/blog`, label: i18n.nav.blog, external: false },
+  { href: `/${lang}/projects`, label: i18n.nav.projects, external: false },
+  { href: `/${lang}/about`, label: i18n.nav.about, external: false },
+  { href: `/${lang}/contact`, label: i18n.nav.contact, external: false },
+  { href: SITE.portfolio, label: i18n.nav.portfolio, external: true },
+];
+
+const isActive = (href: string) => {
+  if (href === homePath) {
+    return pathname === homePath || pathname === `${homePath}/`;
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+};
+---
+
+<header class="sticky top-0 z-50 border-b border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-primary)_85%,transparent)] backdrop-blur-md">
+  <div class="container-shell flex items-center justify-between gap-4 py-4">
+    <a href={`/${lang}`} class="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Võ Phú Thịnh</a>
+
+    <nav class="hidden items-center gap-6 md:flex" aria-label="Main navigation">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noreferrer' : undefined}
+            class:list={[
+              'text-base transition-colors px-2 py-1',
+              !item.external && isActive(item.href)
+                ? 'text-[var(--brand)] font-bold border-b-2 border-[var(--brand-light)] pb-1'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] rounded-xl'
+            ]}
+          >
+            {item.label}{item.external ? ' ↗' : ''}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <button
+        id="search-trigger"
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-[var(--border-color)] px-3 py-1.5 text-sm text-[var(--text-muted)] transition hover:border-[var(--brand)] hover:text-[var(--brand)] cursor-pointer"
+        aria-label={i18n.nav.search}
+        onclick="window.__openSearch?.()"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="hidden sm:inline text-xs">{i18n.nav.search}</span>
+        <kbd class="hidden md:inline-flex items-center font-mono text-[10px] text-[var(--text-muted)] border border-[var(--border-color)] rounded px-1 py-0.5 leading-none">⌘K</kbd>
+      </button>
+      <LanguageSwitcher lang={lang} pathname={pathname} />
+      <ThemeToggle />
+    </div>
+  </div>
+
+  <div class="container-shell pb-3 md:hidden">
+    <nav class="grid grid-cols-3 gap-2 text-center text-xs" aria-label="Mobile navigation">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noreferrer' : undefined}
+            class:list={[
+              'rounded border px-2 py-2 font-medium',
+              !item.external && isActive(item.href)
+                ? 'border-[var(--brand-light)] text-[var(--brand)]'
+                : 'border-[var(--border-color)] text-[var(--text-secondary)]'
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

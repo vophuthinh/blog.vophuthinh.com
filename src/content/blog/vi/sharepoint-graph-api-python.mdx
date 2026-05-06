@@ -1,0 +1,55 @@
+---
+title: 'Tự động tải file từ SharePoint bằng Microsoft Graph API và Python'
+description: 'Hướng dẫn thực tế cách dùng Python và Microsoft Graph API để tải file từ SharePoint, xử lý lỗi token, site ID, drive ID và subfolder.'
+pubDate: 2026-05-06
+updatedDate: 2026-05-06
+lang: 'vi'
+translationKey: 'sharepoint-graph-api-python'
+category: 'SharePoint'
+tags: ['python', 'sharepoint', 'microsoft-graph', 'automation']
+series: 'SharePoint Automation'
+cover: '/images/covers/sharepoint-graph-api-python.webp'
+draft: false
+featured: true
+---
+
+Khi làm việc với hệ thống doanh nghiệp, SharePoint thường là nơi lưu trữ file và dữ liệu vận hành.
+Kết hợp **Python** với **Microsoft Graph API** giúp chúng ta tự động hóa nhiều tác vụ lặp.
+
+## Chuẩn bị Azure App Registration
+
+- Tạo app registration trong Azure AD.
+- Cấp quyền `Sites.ReadWrite.All` và `Files.ReadWrite.All`.
+- Xin admin consent trước khi chạy production.
+
+## Ví dụ lấy access token
+
+```python
+import requests
+
+TENANT_ID = "your-tenant-id"
+CLIENT_ID = "your-client-id"
+CLIENT_SECRET = "your-client-secret"
+
+url = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token"
+payload = {
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "scope": "https://graph.microsoft.com/.default",
+    "grant_type": "client_credentials",
+}
+
+response = requests.post(url, data=payload, timeout=30)
+response.raise_for_status()
+print(response.json()["access_token"])
+```
+
+## Kinh nghiệm thực tế
+
+- Đặt timeout và retry cho mọi call HTTP.
+- Chuẩn hóa logging để dễ truy vết lỗi production.
+- Quản lý quota API theo batch để tránh throttling.
+
+## Kết luận
+
+Với nền tảng này, bạn có thể mở rộng sang workflow upload báo cáo, đồng bộ tài liệu, và kiểm tra dữ liệu liên phòng ban.

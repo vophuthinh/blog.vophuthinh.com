@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import ProjectCard from '../../components/project/ProjectCard.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { TOPICS, SITE } from '../../consts';
+import { t } from '../../utils/i18n';
+import { getFeaturedPosts, getLatestPosts, getPostsByLang, getSeries, buildSeriesPath, getPostsBySeries } from '../../utils/posts';
+import { getFeaturedProjects, getProjectsByLang } from '../../utils/projects';
+
+const lang = 'vi' as const;
+const i18n = t(lang);
+
+const posts = await getPostsByLang(lang);
+const projects = await getProjectsByLang(lang);
+const latestPosts = getLatestPosts(posts, 4);
+const featuredProjects = getFeaturedProjects(projects, 3);
+const seriesList = getSeries(posts);
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  inLanguage: ['vi', 'en'],
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${SITE.url}/vi/search/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string'
+  }
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  url: SITE.portfolio,
+  jobTitle: 'AI Engineer',
+  worksFor: { '@type': 'Organization', name: 'HPT Vietnam Corporation' },
+  sameAs: [SITE.github, SITE.linkedin]
+};
+---
+
+<BaseLayout
+  lang={lang}
+  title="Võ Phú Thịnh | Blog kỹ thuật & Portfolio"
+  description={i18n.home.heroDescription}
+  canonicalPath="/vi"
+>
+  <Fragment slot="head">
+    <JsonLd schema={websiteSchema} />
+    <JsonLd schema={personSchema} />
+  </Fragment>
+
+  <main id="main-content" class="flex flex-col">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden border-b border-[var(--border-color)]">
+      <div class="absolute inset-0 bg-gradient-to-br from-[var(--brand-soft)] via-transparent to-transparent pointer-events-none"></div>
+      <div class="container-shell py-20 md:py-28 flex flex-col md:flex-row items-center gap-10 relative">
+        <div class="flex-1 flex flex-col gap-6 order-2 md:order-1">
+          <span class="inline-flex items-center gap-2 text-sm font-mono text-[var(--brand)] tracking-wide">{i18n.home.heroTag}</span>
+          <h1 class="text-[40px] md:text-[52px] font-bold leading-[1.08] tracking-[-0.025em]">{i18n.home.heroTitle}</h1>
+          <p class="text-lg leading-relaxed text-[var(--text-secondary)] max-w-xl">{i18n.home.heroDescription}</p>
+          <div class="hero-metric-row">
+            <span class="hero-metric-pill">Song ngữ</span>
+            <span class="hero-metric-pill">Production AI</span>
+            <span class="hero-metric-pill">Sẵn sàng doanh nghiệp</span>
+          </div>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <a href="/vi/blog" class="btn-brand inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition">
+              {i18n.common.viewAllPosts} →
+            </a>
+            <a href="/vi/about" class="inline-flex items-center gap-2 rounded-lg border border-[var(--border-color)] px-6 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:border-[var(--brand-light)] hover:text-[var(--brand)]">
+              About
+            </a>
+          </div>
+        </div>
+        <div class="order-1 md:order-2 flex-shrink-0">
+          <div class="hero-visual">
+            <div class="hero-visual-glow"></div>
+            <div class="hero-visual-ring"></div>
+            <div class="hero-visual-core">VT</div>
+            <span class="hero-visual-chip hero-visual-chip-top">Triển khai thật</span>
+            <span class="hero-visual-chip hero-visual-chip-bottom">AI Governance</span>
+            <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[var(--brand)] flex items-center justify-center text-white text-xs font-bold shadow-lg">AI</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container-shell py-16 flex flex-col gap-20">
+      <!-- Latest Posts -->
+      <section class="flex flex-col gap-8">
+        <div class="flex justify-between items-end">
+          <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.01em]">{i18n.home.latestPosts}</h2>
+          <a href="/vi/blog" class="text-sm font-medium text-[var(--brand)] flex items-center gap-1 transition hover:gap-2">{i18n.common.viewAllPosts} →</a>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          {latestPosts.map((post) => <PostCard post={post} lang={lang} />)}
+        </div>
+      </section>
+
+      <!-- Featured Projects -->
+      {featuredProjects.length > 0 && (
+        <section class="flex flex-col gap-8">
+          <div class="flex justify-between items-end">
+            <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.01em]">{i18n.home.featuredProjects}</h2>
+            <a href="/vi/projects" class="text-sm font-medium text-[var(--brand)] flex items-center gap-1 transition hover:gap-2">{i18n.common.viewAllProjects} →</a>
+          </div>
+          <div class="grid gap-6 md:grid-cols-2">
+            {featuredProjects.map((project) => <ProjectCard project={project} lang={lang} />)}
+          </div>
+        </section>
+      )}
+
+      <!-- Series -->
+      {seriesList.length > 0 && (
+        <section class="flex flex-col gap-8">
+          <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.01em]">Series</h2>
+          <div class="grid gap-4 md:grid-cols-2">
+            {seriesList.map((series) => {
+              const count = getPostsBySeries(posts, series).length;
+              return (
+                <a href={buildSeriesPath(lang, series)} class="glass-card rounded-xl p-6 flex items-center gap-4 transition hover:border-[var(--brand-soft)]">
+                  <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand)]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-[var(--text-primary)] truncate">{series}</h3>
+                    <span class="text-xs text-[var(--text-muted)]">{count} {i18n.pages.postsCount.replace('{count} ', '')}</span>
+                  </div>
+                  <span class="text-[var(--text-muted)] text-sm">→</span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <!-- CTA -->
+      <section class="rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-10 text-center flex flex-col items-center gap-4">
+        <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.01em]">{i18n.home.contactCtaTitle}</h2>
+        <p class="text-[var(--text-secondary)] text-lg max-w-lg">{i18n.home.contactCtaDescription}</p>
+        <a href="/vi/contact" class="btn-brand mt-2 inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition">
+          {i18n.home.contactCtaButton} →
+        </a>
+      </section>
+    </div>
+  </main>
+</BaseLayout>

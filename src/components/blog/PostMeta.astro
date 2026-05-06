@@ -1,0 +1,33 @@
+---
+import type { BlogPost } from '../../utils/posts';
+import type { Locale } from '../../consts';
+import { formatDate } from '../../utils/date';
+import { t } from '../../utils/i18n';
+
+interface Props {
+  post: BlogPost;
+  lang: Locale;
+  readingTime?: number;
+}
+
+const { post, lang, readingTime } = Astro.props;
+const i18n = t(lang);
+---
+
+<div class="flex flex-wrap items-center gap-2 text-sm text-[var(--text-muted)]">
+  <span>{formatDate(post.data.pubDate, lang)}</span>
+  <span class="text-[var(--border-color)]">•</span>
+  <span>{post.data.category}</span>
+  {readingTime && (
+    <>
+      <span class="text-[var(--border-color)]">•</span>
+      <span>{readingTime} {i18n.common.minRead}</span>
+    </>
+  )}
+  {post.data.updatedDate && (
+    <>
+      <span class="text-[var(--border-color)]">•</span>
+      <span>{i18n.common.updated} {formatDate(post.data.updatedDate, lang)}</span>
+    </>
+  )}
+</div>

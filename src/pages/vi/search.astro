@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { t } from '../../utils/i18n';
+
+const lang = 'vi' as const;
+const i18n = t(lang);
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${i18n.pages.searchTitle} | Võ Phú Thịnh`}
+  description={i18n.pages.searchDescription}
+  canonicalPath="/vi/search"
+  noindex={true}
+>
+  <main id="main-content" class="container-shell py-16 flex flex-col gap-10">
+    <section class="max-w-3xl flex flex-col gap-4">
+      <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{i18n.pages.searchTitle}</h1>
+      <p class="text-lg leading-relaxed text-[var(--text-secondary)]">{i18n.pages.searchDescription}</p>
+    </section>
+
+    <div id="search-container" class="max-w-3xl"></div>
+  </main>
+
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline>
+    async function initPagefind() {
+      const { PagefindUI } = await import('/pagefind/pagefind-ui.js');
+      const pagefindUI = new PagefindUI({
+        element: '#search-container',
+        showSubResults: true,
+        showImages: false,
+        translations: {
+          placeholder: 'Nhập từ khóa...',
+          zero_results: 'Không tìm thấy kết quả cho [SEARCH_TERM]',
+          many_results: 'Tìm thấy [COUNT] kết quả cho [SEARCH_TERM]',
+          one_result: 'Tìm thấy [COUNT] kết quả cho [SEARCH_TERM]',
+        }
+      });
+
+      const initialQuery = new URLSearchParams(window.location.search).get('q');
+      if (initialQuery && initialQuery.trim()) {
+        pagefindUI.triggerSearch(initialQuery.trim());
+      }
+    }
+    initPagefind();
+  </script>
+
+  <style is:global>
+    :root {
+      --pagefind-ui-primary: #ec1839;
+      --pagefind-ui-text: var(--text-primary);
+      --pagefind-ui-background: var(--bg-surface);
+      --pagefind-ui-border: var(--border-color);
+      --pagefind-ui-tag: var(--bg-card);
+      --pagefind-ui-border-width: 1px;
+      --pagefind-ui-border-radius: 0.5rem;
+      --pagefind-ui-font: 'Inter', system-ui, sans-serif;
+    }
+
+    .pagefind-ui__search-input {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+    }
+
+    .pagefind-ui__result-link {
+      color: var(--text-primary) !important;
+    }
+
+    .pagefind-ui__result-link:hover {
+      color: var(--pagefind-ui-primary) !important;
+    }
+
+    .pagefind-ui__result-excerpt {
+      color: var(--text-secondary) !important;
+    }
+
+    .pagefind-ui__button {
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-color) !important;
+    }
+  </style>
+</BaseLayout>

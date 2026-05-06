@@ -1,0 +1,52 @@
+---
+import { render } from 'astro:content';
+import ProjectLayout from '../../../layouts/ProjectLayout.astro';
+import { buildAbsoluteUrl } from '../../../utils/seo';
+import {
+  getProjectsByLang,
+  getProjectSlug,
+  getProjectTranslationKey
+} from '../../../utils/projects';
+
+export async function getStaticPaths() {
+  const projects = await getProjectsByLang('vi');
+  return projects.map((project) => ({
+    params: { slug: getProjectSlug(project) }
+  }));
+}
+
+const slug = Astro.params.slug;
+if (!slug) {
+  throw new Error('Missing project slug.');
+}
+
+const projects = await getProjectsByLang('vi');
+const project = projects.find((item) => getProjectSlug(item) === slug);
+if (!project) {
+  throw new Error(`Project not found: ${slug}`);
+}
+
+const enProjects = await getProjectsByLang('en');
+const translationKey = getProjectTranslationKey(project);
+const translatedProject = enProjects.find(
+  (item) => getProjectTranslationKey(item) === translationKey
+);
+
+const canonicalPath = `/vi/projects/${getProjectSlug(project)}`;
+const alternates = [
+  { hrefLang: 'vi', href: buildAbsoluteUrl(canonicalPath) },
+  {
+    hrefLang: 'en',
+    href: buildAbsoluteUrl(
+      `/en/projects/${translatedProject ? getProjectSlug(translatedProject) : getProjectSlug(project)}`
+    )
+  },
+  { hrefLang: 'x-default', href: buildAbsoluteUrl(canonicalPath) }
+];
+
+const { Content } = await render(project);
+---
+
+<ProjectLayout lang="vi" project={project} canonicalPath={canonicalPath} alternates={alternates}>
+  <Content />
+</ProjectLayout>

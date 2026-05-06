@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostCard from '../../../components/blog/PostCard.astro';
+import { t } from '../../../utils/i18n';
+import { getPostsByLang, getCategories, filterPostsByTaxonomy } from '../../../utils/posts';
+import { slugify } from '../../../utils/slug';
+
+const lang = 'en' as const;
+const i18n = t(lang);
+
+export async function getStaticPaths() {
+  const posts = await getPostsByLang('en');
+  const categories = getCategories(posts);
+  return categories.map((category) => ({
+    params: { slug: slugify(category) },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+const posts = await getPostsByLang(lang);
+const filtered = filterPostsByTaxonomy(posts, category);
+const title = i18n.pages.categoryTitle.replace('{name}', category);
+const description = i18n.pages.categoryDescription.replace('{name}', category);
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  canonicalPath={`/en/categories/${slugify(category)}`}
+  noindex={filtered.length < 2}
+>
+  <main id="main-content" class="container-shell py-16 flex flex-col gap-10">
+    <section class="max-w-3xl flex flex-col gap-4">
+      <nav class="flex gap-2 text-sm text-[var(--text-muted)]">
+        <a href="/en/blog" class="hover:text-[var(--brand)] transition-colors">Blog</a> /
+        <span>{i18n.common.category}</span> /
+        <span class="text-[var(--text-primary)]">{category}</span>
+      </nav>
+      <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{category}</h1>
+      <p class="text-lg text-[var(--text-secondary)]">
+        {i18n.pages.postsCount.replace('{count}', String(filtered.length))}
+      </p>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {filtered.map((post) => (
+        <PostCard post={post} lang={lang} />
+      ))}
+    </section>
+  </main>
+</BaseLayout>

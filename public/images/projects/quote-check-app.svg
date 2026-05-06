@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#082f49"/>
+  <rect x="52" y="52" width="1096" height="526" rx="24" fill="#0c4a6e" stroke="#22d3ee" stroke-width="2"/>
+  <text x="90" y="250" fill="#e0f2fe" font-family="Arial, sans-serif" font-size="68" font-weight="700">Quote Check App</text>
+  <text x="90" y="335" fill="#67e8f9" font-family="Arial, sans-serif" font-size="34">Automated quotation validation</text>
+</svg>

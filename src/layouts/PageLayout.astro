@@ -1,0 +1,26 @@
+---
+import type { Locale } from '../consts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  lang: Locale;
+  title: string;
+  description: string;
+  canonicalPath: string;
+}
+
+const { lang, title, description, canonicalPath } = Astro.props;
+---
+
+<BaseLayout lang={lang} title={title} description={description} canonicalPath={canonicalPath}>
+  <main id="main-content" class="container-shell py-16">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl">{title}</h1>
+      <p class="mt-4 max-w-2xl text-lg text-[var(--text-secondary)]">{description}</p>
+      <hr class="my-8 border-[var(--border-color)]" />
+      <div class="prose-block">
+        <slot />
+      </div>
+    </div>
+  </main>
+</BaseLayout>

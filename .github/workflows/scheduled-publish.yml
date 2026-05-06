@@ -1,0 +1,22 @@
+name: Scheduled Publish Trigger
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages deploy hook
+        env:
+          CLOUDFLARE_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$CLOUDFLARE_DEPLOY_HOOK" ]; then
+            echo "Missing CLOUDFLARE_DEPLOY_HOOK secret"
+            exit 1
+          fi
+
+          curl -fsSL -X POST "$CLOUDFLARE_DEPLOY_HOOK"
+          echo "Deploy hook triggered successfully"

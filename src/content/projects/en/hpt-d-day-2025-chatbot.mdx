@@ -1,0 +1,23 @@
+---
+title: 'HPT D-DAY 2025 Chatbot'
+description: 'RAG-powered AI chatbot grounded on official event data with zero hallucination, built for HPT D-DAY 2025.'
+lang: 'en'
+translationKey: 'hpt-d-day-2025-chatbot'
+techStack: ['n8n', 'OpenAI', 'JavaScript', 'RAG', 'Google Sheets', 'Vector Store']
+cover: '/images/projects/hpt-d-day-2025-chatbot.webp'
+featured: true
+---
+
+At HPT D-DAY 2025, attendees and organizers needed instant answers for schedule, sessions, booths, and partner information.
+
+To solve this, I built a zero-hallucination RAG chatbot grounded only on official event data:
+
+- Event data from Excel was chunked and indexed into a vector store.
+- GPT-4o answered only with retrieved context; when data was missing, it explicitly said so.
+- n8n workflows connected retrieval + generation, while Google Sheets enabled real-time content updates.
+
+Results:
+
+- Handled **850+ attendee questions** during the event.
+- Maintained **zero hallucination** policy for critical event information.
+- Significantly reduced workload for the onsite support team.
