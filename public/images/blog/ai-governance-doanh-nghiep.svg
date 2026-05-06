@@ -1,0 +1,24 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E1B4B"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg3)"/>
+  <rect x="100" y="90" width="1400" height="720" rx="28" fill="#111827" stroke="#3730A3"/>
+  <text x="150" y="185" fill="#E0E7FF" font-size="56" font-family="ui-sans-serif, system-ui" font-weight="700">AI Governance Framework</text>
+  <text x="150" y="240" fill="#A5B4FC" font-size="30" font-family="ui-sans-serif, system-ui">Policy • Technical Controls • Risk Review • Monitoring</text>
+
+  <rect x="180" y="300" width="1240" height="100" rx="16" fill="#1E1B4B" stroke="#4F46E5"/>
+  <text x="230" y="360" fill="#C7D2FE" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">Layer 1: Policy and Usage Scope</text>
+
+  <rect x="180" y="430" width="1240" height="100" rx="16" fill="#1E1B4B" stroke="#4F46E5"/>
+  <text x="230" y="490" fill="#C7D2FE" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">Layer 2: Technical Controls in Pipeline</text>
+
+  <rect x="180" y="560" width="1240" height="100" rx="16" fill="#1E1B4B" stroke="#4F46E5"/>
+  <text x="230" y="620" fill="#C7D2FE" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">Layer 3: Risk-Based Approval Flow</text>
+
+  <rect x="180" y="690" width="1240" height="90" rx="16" fill="#1E1B4B" stroke="#4F46E5"/>
+  <text x="230" y="745" fill="#C7D2FE" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">Layer 4: Continuous Monitoring and Audit</text>
+</svg>

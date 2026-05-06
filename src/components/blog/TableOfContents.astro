@@ -9,10 +9,10 @@ const { lang } = Astro.props;
 const title = lang === 'vi' ? 'Mục lục' : 'Table of Contents';
 ---
 
-<aside id="toc-wrapper" class="hidden xl:block">
-  <nav id="toc" class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" aria-label={title}>
+<aside id="toc-wrapper" class="hidden 2xl:block 2xl:w-64 shrink-0">
+  <nav id="toc" class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto w-full" aria-label={title}>
     <h2 class="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-3">{title}</h2>
-    <ul id="toc-list" class="flex flex-col gap-0.5 text-sm border-l border-[var(--border-color)]">
+    <ul id="toc-list" class="flex flex-col gap-0.5 text-xs border-l border-[var(--border-color)]">
       <!-- Populated by JS -->
     </ul>
   </nav>
@@ -37,7 +37,7 @@ const title = lang === 'vi' ? 'Mục lục' : 'Table of Contents';
     const a = document.createElement('a');
     a.href = '#' + heading.id;
     a.textContent = heading.textContent;
-    a.className = 'block py-1 text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors truncate';
+    a.className = 'block w-full py-1 text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors truncate';
     if (heading.tagName === 'H3') {
       a.classList.add('pl-6');
     } else {

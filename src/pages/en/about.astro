@@ -12,12 +12,98 @@ const highlights = [
 ];
 
 const skills = [
-  { category: 'AI & LLM', items: ['LLM', 'RAG', 'Corrective RAG', 'AI Agents'] },
-  { category: 'Frameworks', items: ['Python', 'FastAPI', 'LangChain', 'LangGraph'] },
-  { category: 'Data', items: ['SQL', 'Pandas', 'scikit-learn', 'Power BI'] },
-  { category: 'Cloud & Infra', items: ['Docker', 'Kubernetes', 'AWS', 'Azure'] },
-  { category: 'Platforms', items: ['OpenAI', 'Google AI (Gemini)', 'Qdrant', 'n8n'] },
-  { category: 'Web', items: ['React', 'Next.js', 'Node.js', 'WebSocket'] },
+  {
+    category: 'AI & LLM Engineering',
+    items: [
+      'OpenAI API',
+      'Google Gemini',
+      'Claude',
+      'Llama',
+      'RAG',
+      'Corrective RAG',
+      'AI Agents',
+      'Prompt Engineering',
+      'Function Calling',
+      'Guardrails',
+      'Evaluation Frameworks',
+      'Tool-use Pipelines',
+    ],
+  },
+  {
+    category: 'Frameworks & Orchestration',
+    items: [
+      'Python',
+      'FastAPI',
+      'Flask',
+      'LangChain',
+      'LangGraph',
+      'n8n',
+      'Apache Airflow',
+      'Celery',
+      'REST API',
+      'WebSocket',
+    ],
+  },
+  {
+    category: 'Data & Machine Learning',
+    items: [
+      'SQL',
+      'PostgreSQL',
+      'MongoDB',
+      'Pandas',
+      'NumPy',
+      'scikit-learn',
+      'Feature Engineering',
+      'Model Serving',
+      'Power BI',
+      'Data Storytelling',
+    ],
+  },
+  {
+    category: 'Vector DB & Search',
+    items: [
+      'Qdrant',
+      'Pinecone',
+      'Weaviate',
+      'Chroma',
+      'Elasticsearch',
+      'Hybrid Search',
+      'Semantic Retrieval',
+      'Metadata Filtering',
+    ],
+  },
+  {
+    category: 'Cloud, DevOps & MLOps',
+    items: [
+      'Docker',
+      'Kubernetes',
+      'AWS',
+      'Azure',
+      'GCP',
+      'GitHub Actions',
+      'CI/CD',
+      'Terraform',
+      'Prometheus',
+      'Grafana',
+      'MLflow',
+      'DVC',
+    ],
+  },
+  {
+    category: 'Web & Product Delivery',
+    items: [
+      'React',
+      'Next.js',
+      'Astro',
+      'Node.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'System Design',
+      'A/B Thinking',
+      'Product Analytics',
+      'UX for AI Products',
+    ],
+  },
 ];
 
 const timeline = [
@@ -97,6 +183,9 @@ const timeline = [
 
     <section class="flex flex-col gap-8">
       <h2 class="text-2xl font-semibold leading-snug tracking-[-0.01em]">Tech Stack</h2>
+      <p class="text-[var(--text-secondary)] leading-relaxed max-w-3xl">
+        I focus on full-cycle AI delivery, from problem framing and system architecture to deployment, observability, and business impact tracking. Here is the technology stack I have used across real-world projects.
+      </p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {skills.map((group) => (
           <div class="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-6">

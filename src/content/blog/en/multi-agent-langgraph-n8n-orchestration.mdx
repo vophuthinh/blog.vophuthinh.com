@@ -1,0 +1,125 @@
+---
+title: 'Multi-Agent Workflow with LangGraph and n8n: enterprise orchestration architecture'
+description: 'How to design enterprise multi-agent workflows with LangGraph and n8n, including agent roles, state management, integrations, and production reliability.'
+pubDate: 2026-04-21
+updatedDate: 2026-05-07
+lang: 'en'
+slug: 'en/multi-agent-langgraph-n8n-orchestration'
+translationKey: 'multi-agent-langgraph-n8n-orchestration'
+category: 'Automation'
+tags: ['ai-agents', 'langgraph', 'n8n', 'workflow', 'integration']
+cover: '../../../assets/covers/multi-agent-langgraph-n8n.svg'
+draft: false
+featured: true
+---
+
+As AI workflows grow more complex, a single agent often becomes a bottleneck. Multi-agent architecture can improve modularity and control, but only if orchestration is designed carefully.
+
+![Multi-agent orchestration architecture](/images/blog/multi-agent-langgraph-n8n.svg)
+
+This guide explains how to combine **LangGraph** for stateful reasoning and **n8n** for enterprise integration.
+
+## Quick summary
+
+- Use multi-agent design for specialized, multi-step workflows.
+- LangGraph handles branching logic and persistent state.
+- n8n accelerates integrations with business systems.
+- Reliability requires idempotency, timeout policies, retry control, and fallbacks.
+
+## When to choose multi-agent over single-agent
+
+Multi-agent is a good fit when at least two conditions apply:
+
+- multiple specialized tasks in one business flow
+- route decisions based on intent, risk, or domain
+- persistent state across steps
+- human approval checkpoints for high-risk actions
+
+If the workflow is simple, single-agent remains faster to ship and easier to maintain.
+
+## Recommended agent role model
+
+A practical baseline setup:
+
+- **Router Agent**: classifies intent and routes execution path
+- **Retriever Agent**: gathers supporting evidence
+- **Reasoning Agent**: synthesizes context and drafts outcomes
+- **Policy Agent**: validates rules and compliance boundaries
+- **Action Agent**: executes approved operations through APIs
+
+Each agent should have a narrow scope, clear KPI, and separate telemetry.
+
+## Managing workflow state with LangGraph
+
+A minimal shared state model:
+
+```python
+from typing import TypedDict
+
+class AgentState(TypedDict):
+    query: str
+    intent: str
+    evidence: list[str]
+    draft_answer: str
+    policy_status: str
+    final_answer: str
+```
+
+Best practices:
+
+- keep node updates explicit and minimal
+- avoid hidden side effects inside nodes
+- checkpoint expensive or high-risk steps for recovery
+
+## Using n8n as the integration layer
+
+n8n provides practical value in enterprise environments:
+
+- flexible triggers from webhook, queue, email, or forms
+- fast integration with CRM, ERP, and ticketing platforms
+- clear visual workflow for technical and non-technical stakeholders
+
+A common pattern:
+
+1. n8n receives the business event
+2. n8n invokes a LangGraph service
+3. workflow returns result and updates target systems
+4. failures are routed to retry queue or review queue
+
+## Production reliability checklist
+
+- idempotency key per transaction
+- timeout budget for each node
+- controlled retry with backoff and jitter
+- circuit breaker for external dependencies
+- graceful degrade mode for partial failures
+- alerts based on business outcomes, not just system errors
+
+## Security and governance controls
+
+Because multi-agent workflows touch many systems, controls should be strict:
+
+- role-based tool permissions
+- sensitive data redaction before model calls
+- approval gates for high-risk actions
+- full audit trail for action execution
+
+## FAQ (SEO + GEO)
+
+### Are LangGraph and n8n interchangeable?
+
+No. LangGraph is for stateful reasoning and decision logic. n8n is for automation orchestration and system integration.
+
+### Does multi-agent architecture increase cost?
+
+It can, if poorly designed. But with clear roles and controlled execution, it often improves resolution quality and lowers rework cost.
+
+### Can smaller teams adopt this approach?
+
+Yes. Start with 2 to 3 agents and add complexity only when production needs justify it.
+
+## Final takeaway
+
+LangGraph plus n8n is a strong enterprise pattern when you need intelligent decisions with reliable execution. With clear role design and production-grade controls, multi-agent workflows become a strategic accelerator.
+
+Explore related implementation work in the [projects section](/en/projects).

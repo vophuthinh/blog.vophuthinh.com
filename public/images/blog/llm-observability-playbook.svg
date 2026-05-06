@@ -1,0 +1,36 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="line1" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg1)"/>
+  <rect x="80" y="80" width="1440" height="740" rx="26" fill="#0F172A" stroke="#334155"/>
+  <text x="130" y="190" fill="#E2E8F0" font-size="56" font-family="ui-sans-serif, system-ui" font-weight="700">LLM Observability Playbook</text>
+  <text x="130" y="245" fill="#94A3B8" font-size="30" font-family="ui-sans-serif, system-ui">Trace • Quality • Latency • Cost • Safety</text>
+
+  <rect x="130" y="300" width="640" height="430" rx="20" fill="#111827" stroke="#334155"/>
+  <polyline points="170,620 260,560 340,585 430,520 520,535 620,470 730,500" stroke="url(#line1)" stroke-width="8" fill="none"/>
+  <circle cx="430" cy="520" r="10" fill="#22D3EE"/>
+  <circle cx="620" cy="470" r="10" fill="#22D3EE"/>
+  <text x="170" y="370" fill="#38BDF8" font-size="24" font-family="ui-monospace, SFMono-Regular">P95 Latency</text>
+  <text x="170" y="410" fill="#F8FAFC" font-size="42" font-family="ui-sans-serif, system-ui" font-weight="700">3.1s</text>
+  <text x="170" y="460" fill="#94A3B8" font-size="22" font-family="ui-sans-serif, system-ui">within SLO target</text>
+
+  <rect x="820" y="300" width="650" height="190" rx="20" fill="#111827" stroke="#334155"/>
+  <text x="860" y="365" fill="#94A3B8" font-size="24" font-family="ui-sans-serif, system-ui">Daily Requests</text>
+  <text x="860" y="430" fill="#F8FAFC" font-size="54" font-family="ui-sans-serif, system-ui" font-weight="700">126,480</text>
+
+  <rect x="820" y="520" width="310" height="210" rx="20" fill="#111827" stroke="#334155"/>
+  <text x="850" y="580" fill="#94A3B8" font-size="22" font-family="ui-sans-serif, system-ui">Policy Violations</text>
+  <text x="850" y="650" fill="#F8FAFC" font-size="50" font-family="ui-sans-serif, system-ui" font-weight="700">0.38%</text>
+
+  <rect x="1160" y="520" width="310" height="210" rx="20" fill="#111827" stroke="#334155"/>
+  <text x="1190" y="580" fill="#94A3B8" font-size="22" font-family="ui-sans-serif, system-ui">Cost / Request</text>
+  <text x="1190" y="650" fill="#F8FAFC" font-size="50" font-family="ui-sans-serif, system-ui" font-weight="700">$0.014</text>
+</svg>

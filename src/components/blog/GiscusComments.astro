@@ -7,15 +7,30 @@ interface Props {
 
 const { lang } = Astro.props;
 const repo = 'vophuthinh/blog.vophuthinh.com';
+const repoId = '';
+const category = 'Comments';
+const categoryId = '';
 const giscusLang = lang === 'vi' ? 'vi' : 'en';
+const isConfigured = Boolean(repo && repoId && category && categoryId);
 ---
 
 <section id="comments" class="mt-12 border-t border-[var(--border-color)] pt-8">
   <h2 class="text-xl font-semibold tracking-tight mb-5">{lang === 'vi' ? 'Bình luận' : 'Comments'}</h2>
-  <div id="giscus-container"></div>
+  {isConfigured ? (
+    <div id="giscus-container"></div>
+  ) : (
+    <p class="text-sm text-[var(--text-muted)]">
+      {lang === 'vi' ? (
+        <>Bình luận đang tạm tắt do chưa cấu hình đầy đủ Giscus (`repoId`, `categoryId`).</>
+      ) : (
+        <>Comments are temporarily disabled because Giscus is not fully configured (`repoId`, `categoryId`).</>
+      )}
+    </p>
+  )}
 </section>
 
-<script is:inline define:vars={{ repo, giscusLang }}>
+{isConfigured && (
+<script is:inline define:vars={{ repo, repoId, category, categoryId, giscusLang }}>
 (() => {
   function loadGiscus() {
     const container = document.getElementById('giscus-container');
@@ -28,9 +43,9 @@ const giscusLang = lang === 'vi' ? 'vi' : 'en';
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
     script.dataset.repo = repo;
-    script.dataset.repoId = '';
-    script.dataset.category = 'Comments';
-    script.dataset.categoryId = '';
+    script.dataset.repoId = repoId;
+    script.dataset.category = category;
+    script.dataset.categoryId = categoryId;
     script.dataset.mapping = 'pathname';
     script.dataset.strict = '0';
     script.dataset.reactionsEnabled = '1';
@@ -77,3 +92,4 @@ const giscusLang = lang === 'vi' ? 'vi' : 'en';
   }
 })();
 </script>
+)}

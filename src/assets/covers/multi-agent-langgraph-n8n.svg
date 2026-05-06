@@ -1,0 +1,33 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3F1D2E"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg4)"/>
+  <rect x="80" y="80" width="1440" height="740" rx="26" fill="#111827" stroke="#6B21A8"/>
+  <text x="130" y="180" fill="#F5D0FE" font-size="54" font-family="ui-sans-serif, system-ui" font-weight="700">Multi-Agent Orchestration</text>
+  <text x="130" y="235" fill="#E9D5FF" font-size="30" font-family="ui-sans-serif, system-ui">LangGraph State Machine + n8n Integration Layer</text>
+
+  <rect x="140" y="300" width="250" height="130" rx="16" fill="#581C87"/>
+  <text x="175" y="377" fill="#FAE8FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Router</text>
+
+  <rect x="470" y="300" width="250" height="130" rx="16" fill="#7E22CE"/>
+  <text x="500" y="377" fill="#FAE8FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Retriever</text>
+
+  <rect x="800" y="300" width="250" height="130" rx="16" fill="#9333EA"/>
+  <text x="833" y="377" fill="#FAE8FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Reasoner</text>
+
+  <rect x="1130" y="300" width="250" height="130" rx="16" fill="#A855F7"/>
+  <text x="1180" y="377" fill="#FAE8FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Policy</text>
+
+  <rect x="470" y="540" width="580" height="150" rx="18" fill="#1F2937" stroke="#A855F7"/>
+  <text x="620" y="615" fill="#E9D5FF" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">n8n Action Layer</text>
+  <text x="550" y="655" fill="#C4B5FD" font-size="24" font-family="ui-sans-serif, system-ui">ERP • CRM • Ticketing • Notifications</text>
+
+  <path d="M390 365H470" stroke="#E9D5FF" stroke-width="6"/>
+  <path d="M720 365H800" stroke="#E9D5FF" stroke-width="6"/>
+  <path d="M1050 365H1130" stroke="#E9D5FF" stroke-width="6"/>
+  <path d="M925 430V540" stroke="#E9D5FF" stroke-width="6"/>
+</svg>

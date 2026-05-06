@@ -1,0 +1,33 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg5" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102A43"/>
+      <stop offset="1" stop-color="#0B132B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg5)"/>
+  <rect x="90" y="90" width="1420" height="720" rx="28" fill="#0F172A" stroke="#1D4ED8"/>
+  <text x="140" y="185" fill="#DBEAFE" font-size="56" font-family="ui-sans-serif, system-ui" font-weight="700">Qdrant Hybrid Search Architecture</text>
+  <text x="140" y="240" fill="#93C5FD" font-size="30" font-family="ui-sans-serif, system-ui">Vector Search + Keyword Search + Reranking + Access Filters</text>
+
+  <rect x="140" y="310" width="270" height="150" rx="16" fill="#1E3A8A"/>
+  <text x="185" y="395" fill="#EFF6FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">User Query</text>
+
+  <rect x="500" y="310" width="270" height="150" rx="16" fill="#1D4ED8"/>
+  <text x="565" y="395" fill="#EFF6FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Vector KNN</text>
+
+  <rect x="860" y="310" width="270" height="150" rx="16" fill="#2563EB"/>
+  <text x="895" y="395" fill="#EFF6FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Keyword BM25</text>
+
+  <rect x="1220" y="310" width="230" height="150" rx="16" fill="#3B82F6"/>
+  <text x="1265" y="395" fill="#EFF6FF" font-size="28" font-family="ui-sans-serif, system-ui" font-weight="700">Merge</text>
+
+  <rect x="420" y="560" width="760" height="170" rx="18" fill="#111827" stroke="#3B82F6"/>
+  <text x="520" y="630" fill="#BFDBFE" font-size="34" font-family="ui-sans-serif, system-ui" font-weight="700">Rerank + Metadata Filter + Citation Pack</text>
+  <text x="620" y="675" fill="#93C5FD" font-size="24" font-family="ui-sans-serif, system-ui">department • language • access_scope</text>
+
+  <path d="M410 385H500" stroke="#DBEAFE" stroke-width="6"/>
+  <path d="M770 385H860" stroke="#DBEAFE" stroke-width="6"/>
+  <path d="M1130 385H1220" stroke="#DBEAFE" stroke-width="6"/>
+  <path d="M1335 460V560" stroke="#DBEAFE" stroke-width="6"/>
+</svg>

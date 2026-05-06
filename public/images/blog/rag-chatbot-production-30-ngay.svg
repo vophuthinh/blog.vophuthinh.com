@@ -1,0 +1,40 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#052E16"/>
+      <stop offset="1" stop-color="#064E3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg2)"/>
+  <rect x="90" y="90" width="1420" height="720" rx="28" fill="#022C22" stroke="#14532D"/>
+  <text x="140" y="185" fill="#ECFDF5" font-size="56" font-family="ui-sans-serif, system-ui" font-weight="700">RAG Chatbot - 30 Day Production Checklist</text>
+  <text x="140" y="240" fill="#86EFAC" font-size="30" font-family="ui-sans-serif, system-ui">Data • Retrieval • Evaluation • Go-live</text>
+
+  <rect x="140" y="290" width="300" height="430" rx="18" fill="#052E16" stroke="#166534"/>
+  <text x="175" y="350" fill="#A7F3D0" font-size="24" font-family="ui-monospace, SFMono-Regular">Week 1</text>
+  <text x="175" y="395" fill="#ECFDF5" font-size="30" font-family="ui-sans-serif, system-ui" font-weight="700">Data Readiness</text>
+  <text x="175" y="445" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Source inventory</text>
+  <text x="175" y="480" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Metadata schema</text>
+  <text x="175" y="515" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Access policy</text>
+
+  <rect x="470" y="290" width="300" height="430" rx="18" fill="#052E16" stroke="#166534"/>
+  <text x="505" y="350" fill="#A7F3D0" font-size="24" font-family="ui-monospace, SFMono-Regular">Week 2</text>
+  <text x="505" y="395" fill="#ECFDF5" font-size="30" font-family="ui-sans-serif, system-ui" font-weight="700">Retrieval Stack</text>
+  <text x="505" y="445" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Chunking tests</text>
+  <text x="505" y="480" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Hybrid search</text>
+  <text x="505" y="515" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Citation output</text>
+
+  <rect x="800" y="290" width="300" height="430" rx="18" fill="#052E16" stroke="#166534"/>
+  <text x="835" y="350" fill="#A7F3D0" font-size="24" font-family="ui-monospace, SFMono-Regular">Week 3</text>
+  <text x="835" y="395" fill="#ECFDF5" font-size="30" font-family="ui-sans-serif, system-ui" font-weight="700">Quality Gate</text>
+  <text x="835" y="445" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Benchmark set</text>
+  <text x="835" y="480" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Hallucination check</text>
+  <text x="835" y="515" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Safety tests</text>
+
+  <rect x="1130" y="290" width="300" height="430" rx="18" fill="#052E16" stroke="#166534"/>
+  <text x="1165" y="350" fill="#A7F3D0" font-size="24" font-family="ui-monospace, SFMono-Regular">Week 4</text>
+  <text x="1165" y="395" fill="#ECFDF5" font-size="30" font-family="ui-sans-serif, system-ui" font-weight="700">Controlled Rollout</text>
+  <text x="1165" y="445" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Pilot users</text>
+  <text x="1165" y="480" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Daily review</text>
+  <text x="1165" y="515" fill="#BBF7D0" font-size="22" font-family="ui-sans-serif, system-ui">- Incident response</text>
+</svg>

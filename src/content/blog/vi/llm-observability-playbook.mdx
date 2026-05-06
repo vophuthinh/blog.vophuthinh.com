@@ -1,0 +1,180 @@
+---
+title: 'LLM Observability Playbook 2026: theo dõi AI app production từ trace đến alert'
+description: 'Hướng dẫn LLM observability thực chiến: KPI, tracing, alerting, dashboard và incident response để vận hành AI app ổn định trong doanh nghiệp.'
+pubDate: 2026-05-06
+updatedDate: 2026-05-07
+lang: 'vi'
+slug: 'vi/llm-observability-playbook'
+translationKey: 'llm-observability-playbook'
+category: 'MLOps'
+tags: ['llmops', 'observability', 'tracing', 'sre', 'ai-production']
+cover: '../../../assets/covers/llm-observability-playbook.svg'
+draft: false
+featured: true
+---
+
+Nhiều team triển khai AI app rất nhanh, nhưng khi lượng người dùng tăng thì hệ thống bắt đầu chậm, chi phí đội lên, chất lượng giảm và không ai biết chính xác lỗi nằm ở đâu. Đó là lúc bạn cần **LLM Observability**.
+
+![LLM observability dashboard](/images/blog/llm-observability-playbook.svg)
+
+Nếu bạn đang tìm một playbook để theo dõi ứng dụng LLM production theo kiểu làm được ngay, bài này là bản rút gọn đủ sâu để áp dụng trong doanh nghiệp.
+
+## TL;DR cho người bận
+
+- LLM observability cần theo dõi 4 trục: chất lượng, độ trễ, chi phí, an toàn.
+- Mỗi request phải có `trace_id` và chia thành từng span để debug nhanh.
+- Dashboard nên tách theo vai trò: SRE, AI Engineer, Product, Governance.
+- Alert cần gắn trực tiếp với SLO kinh doanh, không chỉ alert kỹ thuật.
+- Có incident playbook thì team xử lý sự cố nhanh hơn rất nhiều.
+
+## LLM Observability là gì và vì sao quan trọng?
+
+**LLM observability** là khả năng quan sát toàn bộ vòng đời một request AI: từ input, retrieval, model inference, tool call cho đến output và feedback của người dùng.
+
+Với ứng dụng thông thường, bạn theo dõi error và latency là đủ. Với AI app, bạn cần thêm:
+
+- Câu trả lời có đúng ngữ cảnh không?
+- Có đang trả lời tự tin nhưng sai không?
+- Có vi phạm policy nội bộ không?
+- Chi phí token có tăng bất thường không?
+
+Nếu không có các tín hiệu này, bạn sẽ mất hàng giờ điều tra mà vẫn không chốt được nguyên nhân thật.
+
+## 1) Bộ KPI chuẩn cho AI app production
+
+### Nhóm Quality
+
+- Answer acceptance rate.
+- Follow-up rate (người dùng phải hỏi lại).
+- Human handoff rate.
+- Grounded answer rate.
+
+### Nhóm Performance
+
+- P50, P95, P99 latency.
+- Tỷ lệ timeout theo từng bước pipeline.
+- Queue delay khi tải tăng.
+
+### Nhóm Cost
+
+- Token input và output theo model.
+- Cost per resolved request.
+- Chi phí theo tenant hoặc phòng ban.
+
+### Nhóm Safety
+
+- Policy violation rate.
+- Prompt injection attempts.
+- Sensitive data exposure signals.
+
+Bạn không cần đo mọi thứ từ ngày đầu. Hãy chọn 8 đến 12 metric cốt lõi rồi mở rộng dần.
+
+## 2) Thiết kế tracing để debug trong vài phút
+
+Một request nên được chia thành nhiều span:
+
+- `input_validation`
+- `retrieval`
+- `prompt_assembly`
+- `model_inference`
+- `tool_execution`
+- `safety_check`
+- `response_delivery`
+
+Ví dụ log event dạng JSON:
+
+```json
+{
+  "timestamp": "2026-05-07T02:15:00Z",
+  "trace_id": "tr_01HZX1",
+  "span": "model_inference",
+  "model": "gpt-4o-mini",
+  "input_tokens": 1880,
+  "output_tokens": 410,
+  "latency_ms": 1720,
+  "tenant": "operations",
+  "status": "success"
+}
+```
+
+Mỗi khi có sự cố, chỉ cần truy ngược `trace_id` là bạn nhìn được toàn bộ tuyến xử lý.
+
+## 3) Cách đặt SLO cho chatbot nội bộ
+
+Ví dụ SLO dễ áp dụng:
+
+- P95 latency dưới 3.5 giây.
+- Acceptance rate từ 85% trở lên.
+- Policy violation rate dưới 0.5%.
+- Cost per successful resolution không vượt 0.02 USD.
+
+Alert nên gắn với SLO như sau:
+
+- P95 latency vượt ngưỡng trong 15 phút.
+- Acceptance rate giảm mạnh trong 24 giờ.
+- Violation rate tăng bất thường trong 30 phút.
+
+Alert kiểu này giúp team biết mức ưu tiên xử lý theo tác động kinh doanh.
+
+## 4) Dashboard theo vai trò để ra quyết định nhanh
+
+- **SRE dashboard**: realtime health, error rate, latency, queue backlog.
+- **AI Engineer dashboard**: retrieval quality, prompt version, hallucination signals.
+- **Product dashboard**: user adoption, task completion, cost per outcome.
+- **Governance dashboard**: incident log, policy compliance, audit completeness.
+
+Một dashboard chung cho tất cả thường gây nhiễu và khó hành động.
+
+## 5) Incident response playbook cho AI system
+
+Khi có incident lớn:
+
+1. Xác định phạm vi ảnh hưởng theo tenant hoặc use case.
+2. Chuyển model fallback để giảm rủi ro ngay.
+3. Tạm khóa tool call nhạy cảm nếu cần.
+4. Bật human-review cho các response nghi ngờ.
+5. Viết postmortem trong 24 giờ với dữ liệu trace.
+
+Playbook càng cụ thể, thời gian khôi phục càng ngắn.
+
+## 6) Lộ trình triển khai LLM observability trong 14 ngày
+
+Ngày 1-4:
+
+- Chuẩn hóa schema log.
+- Gắn `trace_id` cho toàn pipeline.
+
+Ngày 5-8:
+
+- Dựng dashboard latency, cost, error.
+- Kết nối feedback từ người dùng.
+
+Ngày 9-11:
+
+- Định nghĩa quality proxy metrics.
+- Đặt SLO cho use case chính.
+
+Ngày 12-14:
+
+- Cấu hình alert rules.
+- Diễn tập 1 lần incident game day.
+
+## FAQ (SEO + GEO)
+
+### LLM observability khác monitoring truyền thống ở điểm nào?
+
+Monitoring truyền thống tập trung vào hạ tầng và lỗi hệ thống. LLM observability thêm góc nhìn chất lượng câu trả lời, safety, và chi phí token.
+
+### Team nhỏ có cần làm observability ngay không?
+
+Có. Team nhỏ càng cần observability gọn để tránh mất thời gian debug cảm tính khi sự cố xảy ra.
+
+### Công cụ nào phù hợp để bắt đầu?
+
+Bạn có thể bắt đầu với stack quen thuộc như OpenTelemetry, Prometheus, Grafana và log storage chuẩn JSON. Quan trọng nhất là schema dữ liệu nhất quán.
+
+## Kết luận
+
+Muốn AI app chạy bền trong doanh nghiệp, observability là nền móng bắt buộc. Bắt đầu nhỏ nhưng làm đúng từ đầu sẽ giúp bạn vừa giữ chất lượng, vừa kiểm soát chi phí và rủi ro khi mở rộng quy mô.
+
+Nếu bạn cần mình chia sẻ thêm template dashboard hoặc checklist incident chi tiết, có thể liên hệ tại [trang contact](/vi/contact).
