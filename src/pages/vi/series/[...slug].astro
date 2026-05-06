@@ -38,7 +38,7 @@ const description = i18n.pages.seriesDescription.replace('{name}', series);
         <span>{i18n.common.series}</span> /
         <span class="text-[var(--text-primary)]">{series}</span>
       </nav>
-      <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{series}</h1>
+      <h1 class="font-bold leading-[1.1] tracking-[-0.02em]" style="font-size: clamp(2rem, 5vw, 3rem)">{series}</h1>
       <p class="text-lg text-[var(--text-secondary)]">
         {i18n.pages.postsCount.replace('{count}', String(filtered.length))}
       </p>

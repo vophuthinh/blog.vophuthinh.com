@@ -14,6 +14,7 @@ import RelatedPosts from '../components/blog/RelatedPosts.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
 import ReadingProgress from '../components/blog/ReadingProgress.astro';
 import GiscusComments from '../components/blog/GiscusComments.astro';
+import { Image } from 'astro:assets';
 import { estimateReadingTime, buildCategoryPath, buildPostPath, getPostSlug } from '../utils/posts';
 
 interface Props {
@@ -46,7 +47,7 @@ const schema = {
     '@type': 'Person',
     name: SITE.name
   },
-  image: buildAbsoluteUrl(post.data.cover ?? SITE.defaultOgImage),
+  image: buildAbsoluteUrl(post.data.cover?.src ?? SITE.defaultOgImage),
   mainEntityOfPage: buildAbsoluteUrl(canonicalPath)
 };
 
@@ -74,7 +75,7 @@ const breadcrumbSchema = {
   title={`${post.data.title} | ${SITE.name}`}
   description={post.data.description}
   canonicalPath={canonicalPath}
-  ogImage={post.data.cover}
+  ogImage={post.data.cover?.src}
   type="article"
   alternates={alternates}
   publishedTime={post.data.pubDate}
@@ -112,14 +113,13 @@ const breadcrumbSchema = {
 
         {post.data.cover && (
           <div class="w-full aspect-[2/1] md:aspect-[16/9] rounded-lg border border-[var(--border-color)] overflow-hidden">
-            <img
+            <Image
               src={post.data.cover}
               alt={post.data.title}
+              widths={[600, 900, 1200]}
+              sizes="(min-width: 1120px) 1120px, 100vw"
               class="w-full h-full object-cover"
-              width="1200"
-              height="630"
               loading="eager"
-              fetchpriority="high"
               decoding="async"
             />
           </div>

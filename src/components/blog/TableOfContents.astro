@@ -53,10 +53,10 @@ const title = lang === 'vi' ? 'Mục lục' : 'Table of Contents';
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        links.forEach(l => l.classList.remove('text-[var(--brand)]', 'border-l-2', 'border-[var(--brand)]', 'font-medium'));
+        links.forEach(l => l.classList.remove('text-[var(--brand)]', 'font-semibold'));
         const active = tocList.querySelector(`a[href="#${entry.target.id}"]`);
         if (active) {
-          active.classList.add('text-[var(--brand)]', 'border-l-2', 'border-[var(--brand)]', 'font-medium');
+          active.classList.add('text-[var(--brand)]', 'font-semibold');
           active.classList.remove('text-[var(--text-muted)]');
         }
       }

@@ -84,7 +84,7 @@ a {
 
 @media (max-width: 640px) {
     .container-shell {
-        width: min(1120px, calc(100% - 2rem));
+        width: min(1120px, calc(100% - 2.25rem));
     }
 }
 

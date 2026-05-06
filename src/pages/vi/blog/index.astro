@@ -19,15 +19,15 @@ const categories = getCategories(posts);
   <main id="main-content" class="container-shell py-16 flex flex-col gap-10">
     <!-- Header Section -->
     <section class="max-w-3xl flex flex-col gap-4">
-      <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{i18n.pages.blogTitle}</h1>
+      <h1 class="font-bold leading-[1.1] tracking-[-0.02em]" style="font-size: clamp(2rem, 5vw, 3rem)">{i18n.pages.blogTitle}</h1>
       <p class="text-lg leading-relaxed text-[var(--text-secondary)]">{i18n.pages.blogDescription}</p>
     </section>
 
     <!-- Category Filter -->
     <section class="flex flex-wrap gap-2 border-b border-[var(--border-color)] pb-6">
-      <button class="filter-btn active text-sm font-medium px-3 py-1.5 rounded-lg bg-[var(--brand)] text-white transition-all hover:opacity-90" data-category="">Tất cả</button>
+      <button class="filter-btn active text-sm font-medium px-3 py-1.5 rounded-md bg-[var(--brand)] text-white transition-colors hover:opacity-90" data-category="">Tất cả</button>
       {categories.map((category) => (
-        <button class="filter-btn text-sm font-medium px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--brand-light)] hover:text-[var(--text-primary)] transition-all" data-category={category}>{category}</button>
+        <button class="filter-btn text-sm font-medium px-3 py-1.5 rounded-md bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--brand-light)] hover:text-[var(--text-primary)] transition-colors" data-category={category}>{category}</button>
       ))}
     </section>
 

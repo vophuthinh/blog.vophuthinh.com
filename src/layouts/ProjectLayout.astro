@@ -7,6 +7,7 @@ import { buildAbsoluteUrl } from '../utils/seo';
 import BaseLayout from './BaseLayout.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
 import TechStack from '../components/project/TechStack.astro';
+import { Image } from 'astro:assets';
 
 interface Props {
   lang: Locale;
@@ -41,7 +42,7 @@ const breadcrumbSchema = {
   title={`${project.data.title} | Project`}
   description={project.data.description}
   canonicalPath={canonicalPath}
-  ogImage={project.data.cover}
+  ogImage={project.data.cover?.src}
   alternates={alternates}
 >
   <Fragment slot="head">
@@ -56,15 +57,14 @@ const breadcrumbSchema = {
     </nav>
 
     {project.data.cover && (
-      <div class="w-full aspect-[2/1] md:aspect-[16/9] rounded-xl border border-[var(--border-color)] overflow-hidden">
-        <img
+      <div class="w-full aspect-[2/1] md:aspect-[16/9] rounded-lg border border-[var(--border-color)] overflow-hidden">
+        <Image
           src={project.data.cover}
           alt={project.data.title}
+          widths={[600, 900, 1200]}
+          sizes="(min-width: 1120px) 1120px, 100vw"
           class="w-full h-full object-cover"
-          width="1200"
-          height="630"
           loading="eager"
-          fetchpriority="high"
           decoding="async"
         />
       </div>
@@ -73,7 +73,7 @@ const breadcrumbSchema = {
     <!-- Title + Tech + Buttons -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-[var(--border-color)] pb-10">
       <div class="flex flex-col gap-3">
-        <h1 class="text-[48px] font-bold leading-[1.1] tracking-[-0.02em]">{project.data.title}</h1>
+        <h1 class="font-bold leading-[1.1] tracking-[-0.02em]" style="font-size: clamp(2rem, 5vw, 3rem)">{project.data.title}</h1>
         <div class="flex flex-wrap gap-2 mt-1">
           <TechStack stack={project.data.techStack} />
         </div>
@@ -94,7 +94,7 @@ const breadcrumbSchema = {
             href={project.data.demoUrl}
             target="_blank"
             rel="noreferrer"
-            class="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-6 py-2.5 text-sm font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition hover:brightness-105"
+            class="inline-flex items-center gap-2 rounded-md bg-[var(--brand)] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:brightness-105"
           >
             Live Demo ↗
           </a>
