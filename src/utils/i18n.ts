@@ -14,7 +14,7 @@ export const translations = {
         },
         home: {
             heroTag: 'AI Agents • MLOps • AI Governance',
-            heroTitle: 'Blog kỹ thuật và portfolio cá nhân của Võ Phú Thịnh',
+            heroTitle: 'Blog kỹ thuật của Võ Phú Thịnh',
             heroDescription:
                 'Nơi mình chia sẻ kinh nghiệm thực chiến về AI Agents, MLOps, AI Governance, automation và triển khai hệ thống AI trong doanh nghiệp.',
             featuredPosts: 'Bài viết nổi bật',
