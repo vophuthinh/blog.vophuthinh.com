@@ -6,7 +6,7 @@ lang: 'en'
 slug: 'en/menh-ban-tu-vi-dau-so-online'
 translationKey: 'menh-ban-tu-vi-dau-so-online'
 category: 'Web Engineering'
-tags: ['tu-vi', 'full-stack', 'seo', 'vite', 'express', 'supabase']
+tags: ['tu-vi', 'full-stack', 'seo', 'rule-engine']
 draft: false
 featured: false
 ---
@@ -35,15 +35,12 @@ A chart is only as correct as its input. I found two main sources of error and h
 
 ## Architecture
 
-| Layer | Technology | Role |
-| --- | --- | --- |
-| Front end | Vite, JavaScript | Chart, analysis, cycles, compatibility, export |
-| API | Express, helmet, hpp | Chart building, validation, rate limiting |
-| Star placement | iztro | Palaces, stars, cycle layers |
-| Calendar | Custom Vietnamese lunar module and lunar-javascript | Stems and branches, solar terms, sound elements |
-| Charts | ECharts | Life K-Line, compatibility radar |
-| Accounts | Supabase | Login, saved charts, orders |
-| Payments | SePay | Bank transfer and webhook |
+Mệnh Bàn is a full-stack web app with four main parts:
+
+- **Chart engine**: places 12 palaces, main and auxiliary stars, Tứ Hóa and the cycle layers.
+- **Calendar**: Vietnamese lunar calendar, true solar time, stems and branches, solar terms, sound elements.
+- **Interpretation and charts**: star patterns, compatibility, the Life K-Line.
+- **Accounts and payments**: saved charts, paid plans, access checks on the server.
 
 All interpretation comes from an **internal rule engine**. It calls no LLM and no external AI API. I chose this so results are stable, repeatable and testable: the same chart always gives the same reading.
 
@@ -65,8 +62,7 @@ The build generates **22 static pages**: 8 guides (what is Tứ Hóa, what the s
 
 Related engineering work:
 
-- Self-hosted, preloaded fonts, with Google Fonts removed from the page.
-- Lazy-loaded renderers, which cut the entry bundle from **328KB to 79KB (gzip)**.
+- Page-load tuning that cut the main download by about **76%**.
 - A robots.txt that lets search and AI crawlers read public content and blocks `/api/`.
 
 ## Quality: 247 tests
@@ -84,8 +80,8 @@ The project has 36 test files and **247 passing tests**. They cover golden regre
 **Does Mệnh Bàn use AI to interpret charts?**
 No. Readings come from an internal rule engine and no large language model is called.
 
-**What is Mệnh Bàn built with?**
-Vite for the front end, Express for the API, Supabase for accounts, SePay for payments, the iztro library for star placement and ECharts for charts.
+**How is Mệnh Bàn built?**
+It is a full-stack web app that I designed and built in about six months: a chart engine, a Vietnamese lunar calendar, a rule-based interpretation engine, accounts, paid plans and content pages for search.
 
 **Why does the birth hour need to be exact?**
 The birth hour decides the Life palace, so one double-hour of error can change the whole chart. Mệnh Bàn includes a true solar time correction based on the birthplace.

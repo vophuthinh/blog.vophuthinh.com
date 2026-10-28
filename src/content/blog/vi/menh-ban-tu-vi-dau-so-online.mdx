@@ -6,7 +6,7 @@ lang: 'vi'
 slug: 'vi/menh-ban-tu-vi-dau-so-online'
 translationKey: 'menh-ban-tu-vi-dau-so-online'
 category: 'Web Engineering'
-tags: ['tu-vi', 'full-stack', 'seo', 'vite', 'express', 'supabase']
+tags: ['tu-vi', 'full-stack', 'seo', 'rule-engine']
 draft: false
 featured: false
 ---
@@ -35,15 +35,12 @@ Một lá số chỉ đúng khi dữ liệu đầu vào đúng. Tôi gặp hai n
 
 ## Kiến trúc kỹ thuật
 
-| Thành phần | Công nghệ | Vai trò |
-| --- | --- | --- |
-| Giao diện | Vite, JavaScript | Lá số, phân tích, vận hạn, hợp bàn, xuất file |
-| API | Express, helmet, hpp | Lập lá số, kiểm tra dữ liệu, giới hạn tốc độ |
-| An sao | iztro | Vị trí cung, sao, các lớp vận |
-| Lịch pháp | Module lịch âm Việt và lunar-javascript | Can chi, tiết khí, nạp âm |
-| Đồ thị | ECharts | Life K-Line, radar hợp bàn |
-| Tài khoản | Supabase | Đăng nhập, lưu lá số, đơn hàng |
-| Thanh toán | SePay | Chuyển khoản ngân hàng, webhook |
+Mệnh Bàn là một ứng dụng web full-stack gồm bốn khối chính:
+
+- **Engine lá số**: an 12 cung, chính tinh, phụ tinh, Tứ Hóa và các lớp vận.
+- **Lịch pháp**: lịch âm Việt, giờ mặt trời thật, can chi, tiết khí, nạp âm.
+- **Diễn giải và biểu đồ**: cách cục, hợp bàn, Life K-Line.
+- **Tài khoản và thanh toán**: lưu lá số, gói trả phí, kiểm tra quyền ở server.
 
 Toàn bộ phần diễn giải là **rule engine nội bộ**, không gọi LLM hay API AI bên ngoài. Tôi chọn cách này để kết quả ổn định, lặp lại được và kiểm thử được. Cùng một lá số luôn cho cùng một bản luận giải.
 
@@ -65,8 +62,7 @@ Dự án tạo **22 trang tĩnh** khi build: 8 bài hướng dẫn (Tứ Hóa l�
 
 Một số việc kỹ thuật đi kèm:
 
-- Phông chữ tự lưu và preload, bỏ Google Fonts khỏi trang.
-- Tải chậm các bộ kết xuất, giảm bundle đầu vào từ **328KB xuống 79KB (gzip)**.
+- Tối ưu tải trang, giảm dung lượng gói tải đầu khoảng **76%**.
 - robots.txt cho phép bot tìm kiếm và bot AI vào nội dung công khai, chặn `/api/`.
 
 ## Chất lượng: 247 test
@@ -84,8 +80,8 @@ Dự án có 36 tệp kiểm thử và **247 test đều pass**, gồm đối ch
 **Mệnh Bàn có dùng AI để luận giải không?**
 Không. Phần luận giải chạy bằng rule engine nội bộ, không gọi mô hình ngôn ngữ lớn.
 
-**Mệnh Bàn xây bằng công nghệ gì?**
-Vite cho giao diện, Express cho API, Supabase cho tài khoản, SePay cho thanh toán, thư viện iztro để an sao và ECharts cho biểu đồ.
+**Mệnh Bàn được xây như thế nào?**
+Đây là ứng dụng web full-stack do tôi tự thiết kế và xây trong khoảng 6 tháng: engine lá số, lịch âm Việt, rule engine diễn giải, tài khoản, gói trả phí và các trang nội dung phục vụ tìm kiếm.
 
 **Vì sao cần giờ sinh chính xác?**
 Giờ sinh quyết định cung Mệnh, nên lệch một canh giờ có thể đổi cả lá số. Mệnh Bàn có công cụ hiệu chỉnh giờ mặt trời thật theo nơi sinh.
