@@ -1,0 +1,96 @@
+---
+title: 'Mệnh Bàn: tôi xây web lập lá số Tử Vi Đẩu Số online từ đầu như thế nào'
+description: 'Mệnh Bàn là website lập lá số Tử Vi Đẩu Số online bằng tiếng Việt. Bài này kể cách xây engine lá số, lịch âm Việt, giờ mặt trời thật, thanh toán và SEO trong 6 tháng.'
+pubDate: 2026-10-29
+lang: 'vi'
+slug: 'vi/menh-ban-tu-vi-dau-so-online'
+translationKey: 'menh-ban-tu-vi-dau-so-online'
+category: 'Web Engineering'
+tags: ['tu-vi', 'full-stack', 'seo', 'vite', 'express', 'supabase']
+draft: false
+featured: false
+---
+
+**Mệnh Bàn** ([menhban.io.vn](https://menhban.io.vn/)) là website lập lá số **Tử Vi Đẩu Số** online bằng tiếng Việt. Người dùng nhập ngày giờ sinh và giới tính, hệ thống an 12 cung, 14 chính tinh, Tứ Hóa, Đại Hạn, Lưu Niên, rồi diễn giải bằng tiếng Việt dễ hiểu. Tôi thiết kế và xây toàn bộ một mình trong khoảng 6 tháng (từ 12/04 đến 27/10/2026).
+
+Bài này kể lại những quyết định kỹ thuật chính, để ai đang làm sản phẩm tương tự có thể tham khảo.
+
+## Mệnh Bàn có những tính năng gì?
+
+- **Lập lá số** theo dương lịch hoặc âm lịch, hỗ trợ tháng nhuận.
+- **Bốn trường phái chấm điểm**: Cân bằng, Trung Châu, Tam Hợp, Tứ Hóa. Trường phái chỉ đổi cách chấm điểm diễn giải, không đổi vị trí cung và sao.
+- **Phân tích sâu**: Tứ Hóa phi tinh, hơn 23 cách cục cổ điển, tam phương tứ chính.
+- **Vận hạn**: Đại Hạn, Lưu Niên và các lớp vận nhỏ hơn.
+- **Đường đời**: biểu đồ Life K-Line cho 100 năm.
+- **Hợp bàn**: so sánh hai lá số, cho điểm từ 0 đến 100 kèm giải thích từng yếu tố.
+- **Thẻ Nhật Vận, Bách khoa 14 chính tinh, xuất ảnh và PDF.**
+
+## Vì sao lập lá số online dễ sai?
+
+Một lá số chỉ đúng khi dữ liệu đầu vào đúng. Tôi gặp hai nguồn sai chính và xử lý cả hai.
+
+**1. Lịch âm Việt khác lịch âm Trung Quốc.** Hai lịch lệch nhau ở một số ngày, nên cùng một ngày dương có thể ra hai ngày âm khác nhau. Mệnh Bàn dùng module lịch âm Việt Nam riêng (múi giờ UTC+7), có kiểm thử cho ranh giới tháng, tháng nhuận và tháng đủ.
+
+**2. Giờ đồng hồ khác giờ mặt trời thật.** Giờ sinh quyết định cung Mệnh. Nhưng giờ đồng hồ Việt Nam lấy kinh tuyến 105°Đ làm chuẩn, trong khi nơi sinh có thể lệch vài độ kinh. Tôi thêm công cụ **Chân Thái Dương Thời** dùng kinh độ của 63 tỉnh thành và phương trình thời gian. Khi giờ sinh sát ranh giới giữa hai canh giờ, hệ thống cảnh báo để người dùng xác nhận lại.
+
+## Kiến trúc kỹ thuật
+
+| Thành phần | Công nghệ | Vai trò |
+| --- | --- | --- |
+| Giao diện | Vite, JavaScript | Lá số, phân tích, vận hạn, hợp bàn, xuất file |
+| API | Express, helmet, hpp | Lập lá số, kiểm tra dữ liệu, giới hạn tốc độ |
+| An sao | iztro | Vị trí cung, sao, các lớp vận |
+| Lịch pháp | Module lịch âm Việt và lunar-javascript | Can chi, tiết khí, nạp âm |
+| Đồ thị | ECharts | Life K-Line, radar hợp bàn |
+| Tài khoản | Supabase | Đăng nhập, lưu lá số, đơn hàng |
+| Thanh toán | SePay | Chuyển khoản ngân hàng, webhook |
+
+Toàn bộ phần diễn giải là **rule engine nội bộ**, không gọi LLM hay API AI bên ngoài. Tôi chọn cách này để kết quả ổn định, lặp lại được và kiểm thử được. Cùng một lá số luôn cho cùng một bản luận giải.
+
+## Thanh toán và phân quyền: phần khó nhất
+
+Gói trả phí chia theo từng lá số và theo thời hạn. Vài quyết định đáng chú ý:
+
+- **Server tự tính mã lá số** từ ngày giờ sinh, không tin mã do trình duyệt gửi.
+- **Kiểm tra quyền ở server**, không chỉ ẩn nút trên giao diện. Người dùng gói thấp không thể gọi thẳng API của gói cao.
+- **Sửa nhầm giờ sinh một lần** trong 24 giờ sau khi mua, vì nhập sai giờ sinh là lỗi phổ biến nhất.
+- **Khoản trừ khi nâng cấp**: mua lẻ trong 30 ngày được trừ tối đa một nửa giá gói nâng cấp.
+- **Ghi metadata đơn hàng nguyên tử** bằng hàm trong cơ sở dữ liệu, để hai yêu cầu đồng thời không ghi đè lẫn nhau.
+
+Các tình huống vượt quyền, giới hạn tốc độ và webhook đều có test riêng.
+
+## SEO cho một sản phẩm tiếng Việt
+
+Dự án tạo **22 trang tĩnh** khi build: 8 bài hướng dẫn (Tứ Hóa là gì, Cung Phu Thê xem gì, 12 cung, 14 chính tinh...) và 14 trang riêng cho từng chính tinh. Mỗi trang trả lời một câu hỏi tìm kiếm cụ thể, có tiêu đề, mô tả, canonical riêng và dữ liệu cấu trúc FAQPage. Số liệu trong bài lấy từ cùng nguồn với luận giải trên web nên hai nơi không lệch nhau.
+
+Một số việc kỹ thuật đi kèm:
+
+- Phông chữ tự lưu và preload, bỏ Google Fonts khỏi trang.
+- Tải chậm các bộ kết xuất, giảm bundle đầu vào từ **328KB xuống 79KB (gzip)**.
+- robots.txt cho phép bot tìm kiếm và bot AI vào nội dung công khai, chặn `/api/`.
+
+## Chất lượng: 247 test
+
+Dự án có 36 tệp kiểm thử và **247 test đều pass**, gồm đối chiếu kết quả lá số mẫu (golden regression), lịch âm, giờ mặt trời, luồng thanh toán, phân quyền, chống vượt quyền và SEO. Mỗi lần sửa luận giải hay quy tắc, test báo ngay nếu kết quả cũ bị đổi.
+
+## Giới hạn cần nói rõ
+
+- Tử Vi là hệ thống diễn giải truyền thống, **chưa được khoa học xác nhận là công cụ dự báo**.
+- Điểm sao và điểm vận là công thức nội bộ để so sánh tương đối, không phải xác suất xảy ra sự kiện.
+- Nội dung chỉ để tham khảo, không thay thế tư vấn y tế, pháp lý hay tài chính.
+
+## Câu hỏi thường gặp
+
+**Mệnh Bàn có dùng AI để luận giải không?**
+Không. Phần luận giải chạy bằng rule engine nội bộ, không gọi mô hình ngôn ngữ lớn.
+
+**Mệnh Bàn xây bằng công nghệ gì?**
+Vite cho giao diện, Express cho API, Supabase cho tài khoản, SePay cho thanh toán, thư viện iztro để an sao và ECharts cho biểu đồ.
+
+**Vì sao cần giờ sinh chính xác?**
+Giờ sinh quyết định cung Mệnh, nên lệch một canh giờ có thể đổi cả lá số. Mệnh Bàn có công cụ hiệu chỉnh giờ mặt trời thật theo nơi sinh.
+
+**Xem lá số có mất phí không?**
+Phần cơ bản miễn phí với giới hạn lượt mỗi ngày. Luận giải chi tiết, vận hạn đầy đủ và hợp bàn thuộc các gói trả phí.
+
+Bạn có thể dùng thử tại [menhban.io.vn](https://menhban.io.vn/). Nếu bạn đang xây một sản phẩm tương tự và cần trao đổi về lịch âm, phân quyền hay SEO, hãy liên hệ với tôi.

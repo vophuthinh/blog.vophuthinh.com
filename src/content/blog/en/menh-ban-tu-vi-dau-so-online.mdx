@@ -1,0 +1,96 @@
+---
+title: 'Mệnh Bàn: how I built an online Tử Vi Đẩu Số (Purple Star Astrology) chart website from scratch'
+description: 'Mệnh Bàn is a Vietnamese website that builds Tử Vi Đẩu Số charts online. How I built the chart engine, Vietnamese lunar calendar, true solar time, payments and SEO in 6 months.'
+pubDate: 2026-10-29
+lang: 'en'
+slug: 'en/menh-ban-tu-vi-dau-so-online'
+translationKey: 'menh-ban-tu-vi-dau-so-online'
+category: 'Web Engineering'
+tags: ['tu-vi', 'full-stack', 'seo', 'vite', 'express', 'supabase']
+draft: false
+featured: false
+---
+
+**Mệnh Bàn** ([menhban.io.vn](https://menhban.io.vn/)) is a Vietnamese website that builds **Tử Vi Đẩu Số** (Purple Star Astrology, also written Zi Wei Dou Shu) charts online. A visitor enters a birth date, hour and gender. The system places 12 palaces, 14 main stars, the four transformations (Tứ Hóa), major cycles (Đại Hạn) and yearly cycles (Lưu Niên), then explains the result in plain Vietnamese. I designed and built all of it alone in about six months, from 12 April to 27 October 2026.
+
+This post covers the main technical decisions, for anyone building a similar product.
+
+## What does Mệnh Bàn do?
+
+- **Builds a chart** from a solar or lunar date, with leap month support.
+- **Four scoring schools**: Balanced, Trung Châu, Tam Hợp and Tứ Hóa. The school changes how the interpretation is scored, never the position of palaces and stars.
+- **Deep analysis**: Tứ Hóa flying stars, more than 23 classical star patterns (cách cục) and the three-directions-four-aspects view.
+- **Cycles**: major cycles, yearly cycles and finer layers.
+- **Life K-Line**: a 100-year chart of favorable and difficult periods.
+- **Compatibility**: compares two charts and gives a score from 0 to 100 with an explanation per factor.
+- **Daily card, an encyclopedia of the 14 main stars, image and PDF export.**
+
+## Why are online charts often wrong?
+
+A chart is only as correct as its input. I found two main sources of error and handled both.
+
+**1. The Vietnamese lunar calendar differs from the Chinese one.** The two calendars disagree on some days, so one solar date can give two different lunar dates. Mệnh Bàn uses its own Vietnamese lunar calendar module (UTC+7), with tests for month boundaries, leap months and long and short months.
+
+**2. Clock time differs from true solar time.** The birth hour decides the Life palace. Vietnam's clock follows the 105°E meridian, but a birthplace can sit a few degrees away. I added a **true solar time** tool (Chân Thái Dương Thời) that uses the longitude of 63 provinces and the equation of time. When the birth time sits close to the border between two double-hours, the system asks the user to confirm.
+
+## Architecture
+
+| Layer | Technology | Role |
+| --- | --- | --- |
+| Front end | Vite, JavaScript | Chart, analysis, cycles, compatibility, export |
+| API | Express, helmet, hpp | Chart building, validation, rate limiting |
+| Star placement | iztro | Palaces, stars, cycle layers |
+| Calendar | Custom Vietnamese lunar module and lunar-javascript | Stems and branches, solar terms, sound elements |
+| Charts | ECharts | Life K-Line, compatibility radar |
+| Accounts | Supabase | Login, saved charts, orders |
+| Payments | SePay | Bank transfer and webhook |
+
+All interpretation comes from an **internal rule engine**. It calls no LLM and no external AI API. I chose this so results are stable, repeatable and testable: the same chart always gives the same reading.
+
+## Payments and access control: the hardest part
+
+Paid plans are split by chart and by duration. Notable decisions:
+
+- **The server computes the chart key** from the birth data and never trusts a key sent by the browser.
+- **Access is checked on the server**, not only by hiding buttons. A lower plan cannot call a higher plan's API directly.
+- **One free correction** of the birth data within 24 hours of purchase, because a wrong birth hour is the most common mistake.
+- **Upgrade credit**: a single purchase made in the last 30 days is deducted from an upgrade, up to half of the upgrade price.
+- **Atomic order metadata**: a database function writes the metadata, so two concurrent requests cannot overwrite each other.
+
+Access bypass attempts, rate limits and the payment webhook each have their own tests.
+
+## SEO for a Vietnamese product
+
+The build generates **22 static pages**: 8 guides (what is Tứ Hóa, what the spouse palace shows, the 12 palaces, the 14 main stars and more) and 14 pages for individual stars. Each page answers one search question and has its own title, description, canonical URL and FAQPage structured data. Numbers on the pages come from the same source as the readings in the app, so the two never drift apart.
+
+Related engineering work:
+
+- Self-hosted, preloaded fonts, with Google Fonts removed from the page.
+- Lazy-loaded renderers, which cut the entry bundle from **328KB to 79KB (gzip)**.
+- A robots.txt that lets search and AI crawlers read public content and blocks `/api/`.
+
+## Quality: 247 tests
+
+The project has 36 test files and **247 passing tests**. They cover golden regression charts, the lunar calendar, solar time, the payment flow, access control, bypass attempts and SEO. When I change a reading or a rule, the tests show at once if an old result changed.
+
+## Limits to state clearly
+
+- Tử Vi is a traditional interpretation system, **not scientifically validated as a prediction tool**.
+- Star scores and cycle scores are internal formulas for relative comparison, not probabilities of events.
+- The content is for reference and does not replace medical, legal or financial advice.
+
+## Frequently asked questions
+
+**Does Mệnh Bàn use AI to interpret charts?**
+No. Readings come from an internal rule engine and no large language model is called.
+
+**What is Mệnh Bàn built with?**
+Vite for the front end, Express for the API, Supabase for accounts, SePay for payments, the iztro library for star placement and ECharts for charts.
+
+**Why does the birth hour need to be exact?**
+The birth hour decides the Life palace, so one double-hour of error can change the whole chart. Mệnh Bàn includes a true solar time correction based on the birthplace.
+
+**Is it free to view a chart?**
+The basic chart is free with a daily limit. Detailed readings, the full cycles and compatibility are on paid plans.
+
+You can try it at [menhban.io.vn](https://menhban.io.vn/). If you are building something similar and want to talk about lunar calendars, access control or SEO, get in touch.
